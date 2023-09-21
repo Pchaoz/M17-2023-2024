@@ -19,7 +19,7 @@ public class Spawner : MonoBehaviour
 
     private void Awake()
     {
-        spawnrate = 1f;
+        spawnrate = 5f;
         wave = 0;
         max_wave = 10;
         isSpawning = false;
@@ -38,12 +38,14 @@ public class Spawner : MonoBehaviour
         //Debug.Log("HE ENTRADO");
         while (wave < max_wave)
         {
-            Debug.Log("GENERO A UN ENEMIGO");
+            int infoToSel = Random.Range(0, enemyInfos.Length); //ESCOJO LA INFORMACION DEL ENEMIGO QUE QUIERO SPAWNERAR ALEATORIAMENTE
+
             GameObject newEnemy = Instantiate(enemyToSpawn, spawnPoint.position, Quaternion.identity);
-            wave++;
-            newEnemy.GetComponent<Enemy>().LoadInfo(enemyInfos[0]);
-            //ESPERO AL SIGUIENTE
-            yield return new WaitForSeconds(spawnrate);
+            newEnemy.GetComponent<Enemy>().LoadInfo(enemyInfos[0]); //LE PASO LA INFORMACION
+
+            wave++; //SUMO EL CONTADOR DE LA OLEADA
+            yield return new WaitForSeconds(spawnrate); //ESPERO AL SIGUIENTE
         }
+        //LLAMO AL METODO QUE PARA LA WAVE Y ENVIA EL INVOKE PARA AVISAR QUE HAS PASADO DE RONDA
     }
 }

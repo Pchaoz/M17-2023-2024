@@ -9,11 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83dcfca34b7d29f4faabe5a3366da496, type: 3}
-  m_Name: BasicEnemy
+  m_Script: {fileID: 11500000, guid: 6c4560e021e9404449752d27934aadbe, type: 3}
+  m_Name: BaseTurret
   m_EditorClassIdentifier: 
-  hp: 20
-  damage: 5
-  velocity: 2
-  gold: 0
-  color: {r: 0.5896226, g: 0.8745213, b: 1, a: 1}
+  shootSpeed: 0
+  cost: 0
+  color: {r: 0, g: 0, b: 0, a: 0}

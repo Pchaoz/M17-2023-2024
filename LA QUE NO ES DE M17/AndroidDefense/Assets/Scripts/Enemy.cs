@@ -4,20 +4,33 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    [SerializeField]
     private Transform[] path;
-    private int hp;
-    private int speed;
-    private int gold;
-    private int dmg;
 
-   
-    private void Start()
+    private SpriteRenderer m_Sprite;
+
+    //STATS ENEMIGOS
+    [SerializeField]
+    private int m_Hp;
+    [SerializeField]
+    private int m_Speed;
+    [SerializeField]
+    private int m_Gold;
+    [SerializeField]
+    private int m_Dmg;
+
+
+    private void Awake()
     {
-    
+        m_Sprite = GetComponent<SpriteRenderer>();
     }
 
     public void LoadInfo (EnemyInfo info)
     {
-        Debug.Log(info);
+        m_Hp = info.hp;
+        m_Speed = info.velocity;
+        m_Gold = info.gold;
+        m_Dmg = info.damage;
+        m_Sprite.color = info.color;
     }
 }
