@@ -16,3 +16,12 @@ MonoBehaviour:
   damage: 5
   velocity: 2
   color: {r: 0.5896226, g: 0.8745213, b: 1, a: 0}
+  path:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
