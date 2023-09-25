@@ -6,6 +6,8 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     [SerializeField]
+    private List<Transform> path;
+    [SerializeField]
     private GameObject enemyToSpawn;
     [SerializeField]
     private Transform spawnPoint;
@@ -41,7 +43,7 @@ public class Spawner : MonoBehaviour
             int infoToSel = Random.Range(0, enemyInfos.Length); //ESCOJO LA INFORMACION DEL ENEMIGO QUE QUIERO SPAWNERAR ALEATORIAMENTE
 
             GameObject newEnemy = Instantiate(enemyToSpawn, spawnPoint.position, Quaternion.identity);
-            newEnemy.GetComponent<Enemy>().LoadInfo(enemyInfos[0]); //LE PASO LA INFORMACION
+            newEnemy.GetComponent<Enemy>().LoadInfo(enemyInfos[0], path); //LE PASO LA INFORMACION
 
             wave++; //SUMO EL CONTADOR DE LA OLEADA
             yield return new WaitForSeconds(spawnrate); //ESPERO AL SIGUIENTE
