@@ -14,6 +14,8 @@ public class Spawner : MonoBehaviour
     [SerializeField]
     private EnemyInfo[] enemyInfos;
 
+    private IEnumerator m_SpawnCorutine;
+
     private int max_spawned; //SE LO HA DE ENVIAR EL GAME MANAGER (LA CANTIDAD DE ENEMIGOS POR OLEADA) ADEMAS A CADA RONDA SE HAN DE DUPLICAR
     private int spawned; //LOS QUE LLEVA SPAWNEADOS ESA RONDA
     private float spawnrate; //EL CD DEL SPAWN
@@ -25,13 +27,14 @@ public class Spawner : MonoBehaviour
         spawned = 0;
         max_spawned = 10;
         isSpawning = false;
+        m_SpawnCorutine = SpawnWave();
     }
 
     private void Start()
     {
        if (!isSpawning)
        {
-            StartCoroutine(SpawnWave());
+            StartCoroutine(m_SpawnCorutine);
        }
     }
 
