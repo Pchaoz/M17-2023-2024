@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 83dcfca34b7d29f4faabe5a3366da496, type: 3}
-  m_Name: BasicEnemy
+  m_Name: FastEnemy
   m_EditorClassIdentifier: 
-  hp: 20
-  damage: 10
-  velocity: 1.5
-  gold: 20
-  color: {r: 0.5896226, g: 0.8745213, b: 1, a: 1}
+  hp: 10
+  damage: 5
+  velocity: 2.5
+  gold: 15
+  color: {r: 1, g: 0, b: 0.81939316, a: 1}

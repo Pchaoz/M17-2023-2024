@@ -4,19 +4,26 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    //COSAS DE LOS CHECKPOINTS
     [SerializeField]
     private List<Transform> m_Path;
-
     private float changeDistance = 0.2f;
     private int waypointPos = 0;
 
+    //EVENTOS
+    [SerializeField]
+    private GameEventInteger m_Death;
+    [SerializeField]
+    private GameEventInteger m_Escaped;
+
+    //EL SPRITE PARA CAMBIARLO DE COLOR
     private SpriteRenderer m_Sprite;
 
     //STATS ENEMIGOS
     [SerializeField]
     private int m_Hp;
     [SerializeField]
-    private int m_Speed;
+    private float m_Speed;
     [SerializeField]
     private int m_Gold;
     [SerializeField]
@@ -40,21 +47,31 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
-        transform.position = Vector3.MoveTowards(transform.position, m_Path[waypointPos].transform.position, m_Speed * Time.deltaTime);
-
-        if (Vector3.Distance(transform.position, m_Path[waypointPos].transform.position) < changeDistance)
+        if (m_Hp < 1)
         {
-            waypointPos++;
+            m_Death.Raise(m_Gold); //AVISO DE QUE HE MUERTO :(
+            Destroy(gameObject); //MUERTE
         }
+
+        transform.position = Vector3.MoveTowards(transform.position, m_Path[waypointPos].transform.position, m_Speed * Time.deltaTime);
+        if (!(waypointPos == m_Path.Count - 1))
+        {
+
+            if (Vector3.Distance(transform.position, m_Path[waypointPos].transform.position) < changeDistance)
+            {
+                waypointPos++;
+            }
+        }
+       
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("HE TRIGEREADO ALGO");
 
         if (collision.gameObject.tag == "Finish")
-        {
-            Destroy(gameObject);
+        { 
+            m_Escaped.Raise(m_Dmg); //AVISO DE QUE ME HE "ESCAPADO" Y TE HAGO DAÑO
+            Destroy(gameObject); //PENSABAS QUE HABIAS ESCAPADO DE LA MUERTE?
         }
     }
 }

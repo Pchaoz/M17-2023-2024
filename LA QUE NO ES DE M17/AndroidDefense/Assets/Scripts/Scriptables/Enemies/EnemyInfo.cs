@@ -7,7 +7,7 @@ public class EnemyInfo : ScriptableObject
 {
     public int hp;
     public int damage;
-    public int velocity;
+    public float velocity;
     public int gold;
     public Color color; //MAS ADELANTE ALOMEJOR INTENTO CAMBIARLO POR UN SPRITE ANIMADO
 }
