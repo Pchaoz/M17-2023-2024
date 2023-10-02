@@ -13,6 +13,10 @@ public class Bullet : MonoBehaviour
 
     private GameObject m_Target; //CONTRA QUIEN SE HA DE ESTAMPAR
 
+    private void Awake()
+    {
+        
+    }
     void Update()
     {
         transform.position = Vector3.MoveTowards(transform.position, m_Target.transform.position, m_Speed * Time.deltaTime);
@@ -20,13 +24,19 @@ public class Bullet : MonoBehaviour
 
     public void LoadInfo(int dmg, float speed, GameObject target)
     {
+       
         m_Dmg = dmg;
         m_Speed = speed;
         m_Target = target;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("SOY LA BALA Y HE CHOCADO CONRTA: " + collision.gameObject.tag);
+        if (collision.gameObject.tag == "Enemy")
+        {
+            //ME PEGA
+            collision.gameObject.GetComponent<Enemy>().ReciveDamage(m_Dmg);
+            Destroy(this.gameObject);
+        }
     }
 }

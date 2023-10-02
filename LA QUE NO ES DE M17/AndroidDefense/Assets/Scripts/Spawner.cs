@@ -16,30 +16,38 @@ public class Spawner : MonoBehaviour
 
     private IEnumerator m_SpawnCorutine;
 
+    [SerializeField]
     private int max_spawned; //SE LO HA DE ENVIAR EL GAME MANAGER (LA CANTIDAD DE ENEMIGOS POR OLEADA) ADEMAS A CADA RONDA SE HAN DE DUPLICAR
+
+    [SerializeField]
+    private float cooldown; //TIEMPO ENTRE OLEADAS
+
+    [SerializeField]
     private int spawned; //LOS QUE LLEVA SPAWNEADOS ESA RONDA
+
+    [SerializeField]
     private float spawnrate; //EL CD DEL SPAWN
-    private bool isSpawning; //BOOLEAN PARA SABER SI ESTA SPAWNEANDO O NO
+
+    [SerializeField]
+    private GameEventInteger m_RoundOver;
+
+
 
     private void Awake()
     {
         spawnrate = 5f;
         spawned = 0;
         max_spawned = 10;
-        isSpawning = false;
-        m_SpawnCorutine = SpawnWave();
     }
 
     private void Start()
     {
-       if (!isSpawning)
-       {
-            StartCoroutine(m_SpawnCorutine);
-       }
+        StartCoroutine(SpawnWave());
     }
 
     IEnumerator SpawnWave()
     {
+        spawned = 0;
         //Debug.Log("HE ENTRADO");
         while (spawned < max_spawned)
         {
@@ -51,6 +59,14 @@ public class Spawner : MonoBehaviour
             spawned++; //SUMO EL CONTADOR DE LA OLEADA
             yield return new WaitForSeconds(spawnrate); //ESPERO AL SIGUIENTE
         }
-        //LLAMO AL METODO QUE PARA LA WAVE Y ENVIA EL INVOKE PARA AVISAR QUE HAS PASADO DE RONDA
+        StartCoroutine(SpawnNextWave());
+    }
+
+    IEnumerator SpawnNextWave()
+    {
+        m_RoundOver.Raise(1);
+        yield return new WaitForSeconds(cooldown);
+        max_spawned += 5;
+        StartCoroutine(SpawnWave());
     }
 }

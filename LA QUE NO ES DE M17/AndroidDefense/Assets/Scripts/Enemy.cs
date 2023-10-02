@@ -64,7 +64,15 @@ public class Enemy : MonoBehaviour
         }
        
     }
-
+    public void ReciveDamage(int dmg)
+    {
+        m_Hp -= dmg;
+        if (m_Hp < 1)
+        {
+            m_Death.Raise(m_Gold);
+            Destroy(gameObject);
+        }
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
 

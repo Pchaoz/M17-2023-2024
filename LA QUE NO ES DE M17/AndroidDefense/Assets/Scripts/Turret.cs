@@ -15,6 +15,8 @@ public class Turret : MonoBehaviour
     [SerializeField]
     private GameObject m_BalaPrefab;
 
+    bool isShooting = false;
+
     //LLISTA DE ENEMICS DETECTATS
     List<GameObject> m_EnemyList = new List<GameObject>();
 
@@ -38,10 +40,16 @@ public class Turret : MonoBehaviour
     {
         if (m_EnemyList.Count > 0)
         {
-            StartCoroutine(m_Shoot);
+            if (!isShooting)
+            {
+                StartCoroutine(m_Shoot);
+            }
         }else
         {
             StopCoroutine(m_Shoot);
+            isShooting = false;
+
+
         }
     }
     IEnumerator Shoot()
@@ -50,9 +58,14 @@ public class Turret : MonoBehaviour
         {
             GameObject shoot = Instantiate(m_BalaPrefab);
             shoot.GetComponent<Bullet>().LoadInfo(m_Damage, m_BulletSpeed, m_EnemyList[0]);
+            shoot.transform.position = transform.position;
+            isShooting = true;
             yield return new WaitForSeconds(m_Attackspeed);
+            isShooting = false;
         }
-       
+        isShooting = false;
+
+
     }
 
         public void EnemyToList (GameObject enemy)
