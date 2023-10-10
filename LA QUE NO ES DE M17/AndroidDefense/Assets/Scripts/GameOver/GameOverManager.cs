@@ -23,4 +23,12 @@ public class GameOverManager : MonoBehaviour
     {
         SceneManager.LoadScene(0); //CARGO EL MENU PRINCIPAL
     }
+    public void RestartGame()
+    {
+        m_Info.hp = 100;
+        m_Info.money = 25;
+        m_Info.rounds = 0;
+
+        SceneManager.LoadScene(1);
+    }
 }

@@ -15,7 +15,7 @@ public class MenuManager : MonoBehaviour
 
         //PONGO TODOS LOS STATS A EL VALOR POR DEFECTO
         m_Info.hp = 100;
-        m_Info.money = 20;
+        m_Info.money = 25;
         m_Info.rounds = 0;
 
         

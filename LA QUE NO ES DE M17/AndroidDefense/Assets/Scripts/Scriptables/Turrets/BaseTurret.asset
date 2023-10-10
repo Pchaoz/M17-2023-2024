@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c4560e021e9404449752d27934aadbe, type: 3}
   m_Name: BaseTurret
   m_EditorClassIdentifier: 
-  shootSpeed: 0
-  cost: 0
-  color: {r: 0, g: 0, b: 0, a: 0}
+  attackspeed: 2
+  cost: 20
+  damage: 10
+  color: {r: 0.5801887, g: 1, b: 0.6236354, a: 1}

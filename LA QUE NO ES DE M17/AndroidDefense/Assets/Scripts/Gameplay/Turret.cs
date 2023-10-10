@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Unity.VisualScripting.Member;
 
 public class Turret : MonoBehaviour
 {
+    private AudioSource m_Source;
+
     [SerializeField]
     private int m_Attackspeed;
     [SerializeField]
@@ -26,6 +29,7 @@ public class Turret : MonoBehaviour
     private SpriteRenderer m_Sprite;
     private void Awake()
     {
+        m_Source = GetComponent<AudioSource>();
         m_Sprite = GetComponent<SpriteRenderer>();
         m_Shoot = Shoot();
     }
@@ -34,7 +38,7 @@ public class Turret : MonoBehaviour
         m_Attackspeed = info.attackspeed;
         m_Damage = info.damage;
         m_Sprite.color = info.color;
-        m_BulletSpeed = 1f;
+        m_BulletSpeed = 25f;
     }
     void Update()
     {
@@ -56,6 +60,7 @@ public class Turret : MonoBehaviour
     {
         while(m_EnemyList.Count > 0)
         {
+            m_Source.Play();
             GameObject shoot = Instantiate(m_BalaPrefab);
             shoot.GetComponent<Bullet>().LoadInfo(m_Damage, m_BulletSpeed, m_EnemyList[0]);
             shoot.transform.position = transform.position;

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83dcfca34b7d29f4faabe5a3366da496, type: 3}
   m_Name: FastEnemy
   m_EditorClassIdentifier: 
-  hp: 10
+  hp: 25
   damage: 5
-  velocity: 2.5
+  velocity: 2
   gold: 15
   color: {r: 1, g: 0, b: 0.81939316, a: 1}
