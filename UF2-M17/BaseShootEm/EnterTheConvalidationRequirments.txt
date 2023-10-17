@@ -18,6 +18,8 @@ SPAWNER:
 	  para saltar y esquivar enemigos en caso de no querer pegarse con ellos ( Y para comprovar
 	  que si te alejas de su trigger de detectar dejan de seguirte, (MENOS EL TONTO) ).
 
+	- SOLO pero SOLO cambia de ronda si todos los enemigos han sido eliminados
+
 SALAS:
 	- Tambien tendra aproximadamente 3 salas, cada vez que cambias de sala cambia la camara de sala
 	  como en el metroidvania del año pasado.
@@ -31,3 +33,5 @@ PROTAGONISTA:
 	- Una vida, hombre aqui vivimos al limite (Na, solo tengo que ponerle vida a secas)
 
 	- Movimento por InputSystem ( ACABADO -> SALTO + MOVIMIENTO BASICO )
+
+	- Que funcione todo por State machines ( DE MOMENTO TODO BIEN 👍 )
