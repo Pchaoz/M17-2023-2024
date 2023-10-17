@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using UnityEditor.Timeline.Actions;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -16,7 +17,6 @@ public class PlayerControler : MonoBehaviour
 
     private void ChangeState(States newState)
     {
-        Debug.Log("ahora estoy " + newState);
         if (newState == m_CurrentState)
             return;
 
@@ -37,8 +37,19 @@ public class PlayerControler : MonoBehaviour
                 break;
 
             case States.RUN:
-                m_Rb.velocity = new Vector2(m_MovementAction.ReadValue<Vector2>().x * m_Ms, m_Rb.velocity.y); //LEER EL INPUT Y MOVERSE HACIA LA DIRECCION DEL INPUT
-                if (m_Rb.velocity == Vector2.zero)
+                float PosToMNove = m_MovementAction.ReadValue<Vector2>().x;
+                Debug.Log(PosToMNove);
+
+                if (PosToMNove > 0 && canMoveFoward)
+                {
+                    m_Rb.velocity = new Vector2(PosToMNove * m_Ms, m_Rb.velocity.y); //LEER EL INPUT Y MOVERSE HACIA LA DERECHA
+                }
+                else if (PosToMNove < 0 && canMoveBackwards)
+                {
+                    m_Rb.velocity = new Vector2(PosToMNove * m_Ms, m_Rb.velocity.y); //LEER EL INPUT Y MOVERSE HACIA LA IZQUIERDA
+                }
+                
+                if (PosToMNove == 0)
                 {
                     ChangeState(States.IDLE);
                 }
@@ -123,22 +134,27 @@ public class PlayerControler : MonoBehaviour
     private int m_ComboDamage;
     [SerializeField]
     private int m_JumpForce;
-    [SerializeField]
+
     private bool isJumping;
+    private bool canMoveFoward;
+    private bool canMoveBackwards;
 
     //RIGIDBODY AND STUFF
     private Rigidbody2D m_Rb;
 
-
+    private Vector3 m_ColliderBottom;
     private void Awake()
     {
         Assert.IsNotNull(m_InputAsset);
         m_Input = Instantiate(m_InputAsset);
         m_MovementAction = m_Input.FindActionMap("Movement").FindAction("Walk");
-        m_Input.FindActionMap("Movement").FindAction("Jump") += Jump();
+        m_Input.FindActionMap("Movement").FindAction("Jump").performed += Jump;
         m_Input.FindActionMap("Movement").Enable();
 
         m_Rb = GetComponent<Rigidbody2D>();
+        m_ColliderBottom = Vector3.up * GetComponent<BoxCollider2D>().size.y / 2; //LA PART DE ABAIX DEl COLLIDER
+        canMoveFoward = true;
+        canMoveBackwards = true;
     }
 
     private void Start()
@@ -150,15 +166,55 @@ public class PlayerControler : MonoBehaviour
         UpdateState();
     }
 
-    void Jump()
+    void Jump(InputAction.CallbackContext actionContext)
     {
+        if (!isJumping)
+        {
+            Vector3 initialPos = transform.position - m_ColliderBottom;
+            RaycastHit2D hit = Physics2D.Raycast(initialPos, Vector2.down, 0.3f, LayerMask.GetMask("Ground"));
+            if (hit.collider != null)
+            {
+                //Debug.DrawLine(initialPos, hit.point, new UnityEngine.Color(1f, 0f, 1f), 5f);
+                m_Rb.velocity = new Vector2(m_Rb.velocity.x, m_JumpForce);
+                isJumping = true;
+            }
+        }
+    }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Debug.Log("He tocado algo");
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground")) 
+        {
+            isJumping = false;
+        }
+        else if (collision.gameObject.tag == "Wall")
+        {
+            if (collision.gameObject.transform.position.x > transform.position.x)
+            {
+                canMoveFoward = false;
+            }else
+            {
+                canMoveBackwards = false;
+            }
+           
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+         if (collision.gameObject.tag == "Wall")
+         {
+            canMoveBackwards = true;           
+            canMoveFoward = true;
+         }
     }
 
     private void OnDestroy()
     {
         //m_Input.FindActionMap("Standard").FindAction("Attack").performed -= AttackAction; //SUBSTITUIR POR EL MIO CUANDO PEGUE
-        m_Input.FindActionMap("Standard").Disable();
+        m_Input.FindActionMap("Movement").FindAction("Jump").performed -= Jump;
+        m_Input.FindActionMap("Movement").Disable();
     }
 
 

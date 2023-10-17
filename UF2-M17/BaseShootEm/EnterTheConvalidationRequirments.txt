@@ -1,0 +1,33 @@
+---------- COSAS METROIDVANIA VERISON BASE -------------
+
+2 ENEMIGOS: 
+	- EL TONTO (MELEE): Tiene dos triggers a parte de su BoxCollider2D base, 
+	  uno que te detecta y te sigue permanentemente y otro que si 
+	  estas en el se queda quieto y te intenta pegar.
+
+	- EL LISTO (DISTANCIA): Tambien tiene dos triggers pero a diferencia del
+	  tonto este esta patrullando y si te sales de su rango vuelve a patrullar
+	  (Con una corrutina para moverse por ejemplo su speed es -1 X segundos y despues
+	  su velocidad es 1 durante otros X segundos), este ademas tiene el trigger de
+	  pegar mas grande porque va a distancia
+
+	- Por cierto los dos enemigos han de tener sus respectivos sprites con animacion de pegar/disparar + caminar/idle
+
+SPAWNER: 
+	- Tiene un spawner que funciona por oleadas, podria hacer 2 salas con un par de bloques 
+	  para saltar y esquivar enemigos en caso de no querer pegarse con ellos ( Y para comprovar
+	  que si te alejas de su trigger de detectar dejan de seguirte, (MENOS EL TONTO) ).
+
+SALAS:
+	- Tambien tendra aproximadamente 3 salas, cada vez que cambias de sala cambia la camara de sala
+	  como en el metroidvania del año pasado.
+
+PROTAGONISTA: 
+
+	- Tiene que tener su sprite con animaciones de pegar, caminar e incluso si encuentro un idle tambien ponerselo
+	
+	- Dos ataques, uno normal y uno fuerte que se active por combo con diferentes hitbox
+
+	- Una vida, hombre aqui vivimos al limite (Na, solo tengo que ponerle vida a secas)
+
+	- Movimento por InputSystem ( ACABADO -> SALTO + MOVIMIENTO BASICO )
