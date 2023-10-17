@@ -37,7 +37,7 @@ public class PlayerControler : MonoBehaviour
                 break;
 
             case States.RUN:
-                m_Rb.velocity = Vector2.right * m_MovementAction.ReadValue<Vector2>() * m_Ms; //LEER EL INPUT Y MOVERSE HACIA LA DIRECCION DEL INPUT
+                m_Rb.velocity = new Vector2(m_MovementAction.ReadValue<Vector2>().x * m_Ms, m_Rb.velocity.y); //LEER EL INPUT Y MOVERSE HACIA LA DIRECCION DEL INPUT
                 if (m_Rb.velocity == Vector2.zero)
                 {
                     ChangeState(States.IDLE);
@@ -135,6 +135,7 @@ public class PlayerControler : MonoBehaviour
         Assert.IsNotNull(m_InputAsset);
         m_Input = Instantiate(m_InputAsset);
         m_MovementAction = m_Input.FindActionMap("Movement").FindAction("Walk");
+        m_Input.FindActionMap("Movement").FindAction("Jump") += Jump();
         m_Input.FindActionMap("Movement").Enable();
 
         m_Rb = GetComponent<Rigidbody2D>();
@@ -147,6 +148,11 @@ public class PlayerControler : MonoBehaviour
     void Update()
     {
         UpdateState();
+    }
+
+    void Jump()
+    {
+
     }
 
     private void OnDestroy()
