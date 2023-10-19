@@ -13,6 +13,16 @@
 
 	- Por cierto los dos enemigos han de tener sus respectivos sprites con animacion de pegar/disparar + caminar/idle
 
+	- Los enemigos tambien funcionan por maquinas de estado y seran dos difernetes:
+
+		* EL TONTO (MELEE): Estara IDLE hasta que el jugador entre en su "Area de deteccion" 
+		  donde lo empezara a seguir, si entra en su area de ataque frenara y te pegara
+
+		* EL LISTO (DISTANCIA): Estara en PATRULLA de x distancia a x distancia, si el jugador entra en 
+		  su rango de deteccion lo perseguira hasta estar a rango de su disparo frenara y
+		  lo disparara mientras este dentro de el mismo. Si el jugador se sale del rango de deteccion el 
+		  enemigo pasara a modo PATRULLA otra vez hasta volver a detectar al player.
+
 SPAWNER: 
 	- Tiene un spawner que funciona por oleadas, podria hacer 2 salas con un par de bloques 
 	  para saltar y esquivar enemigos en caso de no querer pegarse con ellos ( Y para comprovar
@@ -20,9 +30,25 @@ SPAWNER:
 
 	- SOLO pero SOLO cambia de ronda si todos los enemigos han sido eliminados
 
-SALAS:
-	- Tambien tendra aproximadamente 3 salas, cada vez que cambias de sala cambia la camara de sala
-	  como en el metroidvania del año pasado.
+	- SISTEMA DE OLEADAS: Primero solo saca enemigos melee y pongamosle a ronda 3 ya empieza a sacar los dos
+	  con el uso de PROBABILIDADES. LA OLEDASOLO acaba SOLO si se mueren TODOS los enemigos con avisos mediante
+	  Game Events o Delegados.
+
+ESCENAS:
+
+	* Gameplay: 
+
+		- Uso de Layers ( Como he hecho con el suelo que es "Ground" para los saltos )
+	
+		- Tambien tendra aproximadamente 3 salas, cada vez que cambias de sala cambia la camara de sala
+	  	  como en el metroidvania del año pasado.
+
+	* Menu principal? (OPCIONAL)
+
+
+	* GameOver: 
+		 - Cuando el aliado se muere, solo muestra la oleada en la que te has quedado y permite 
+		   reiniciar el juego.
 
 PROTAGONISTA: 
 
@@ -34,4 +60,20 @@ PROTAGONISTA:
 
 	- Movimento por InputSystem ( ACABADO -> SALTO + MOVIMIENTO BASICO )
 
-	- Que funcione todo por State machines ( DE MOMENTO TODO BIEN 👍 )
+	- Que funcione todo por State machines ( DE MOMENTO TODO BIEN 👍 ), los estados minimos son:
+
+		* Idle
+		* Movement
+		* Attack (Light and Strong) y LOS DOS HAN DE TENER UN COMBO CON EL CONTRARIO 
+		  (Strong-light / light-strong) el combo ha de tener algun tipo de ventaja
+		* Hurt? Cuando recibe daño entra en este estado y despues pasa a estar en IDLE antes de poder hacer
+		  cualquier otra cosa
+
+	- Uso de HURTBOX y HITBOX
+
+		
+OTROS:
+
+	- GUI que muestre la vida del Jugador y numero de oleada ( LAS OLEADAS SOLO SE ACTUALIZAN POR G.E O DELEGADO) 
+	
+	

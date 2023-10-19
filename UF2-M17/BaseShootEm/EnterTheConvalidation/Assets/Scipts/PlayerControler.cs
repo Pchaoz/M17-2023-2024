@@ -17,6 +17,8 @@ public class PlayerControler : MonoBehaviour
 
     private void ChangeState(States newState)
     {
+        //Debug.Log(newState);
+
         if (newState == m_CurrentState)
             return;
 
@@ -38,7 +40,7 @@ public class PlayerControler : MonoBehaviour
 
             case States.RUN:
                 float PosToMNove = m_MovementAction.ReadValue<Vector2>().x;
-                Debug.Log(PosToMNove);
+                //Debug.Log(PosToMNove); ESTO ESTABA DE PRUEBA PARA VER BIEN LOS INPUTS DE MOVIMIENTO
 
                 if (PosToMNove > 0 && canMoveFoward)
                 {
@@ -188,7 +190,8 @@ public class PlayerControler : MonoBehaviour
         {
             isJumping = false;
         }
-        else if (collision.gameObject.tag == "Wall")
+        
+        if (collision.gameObject.tag == "Wall")
         {
             if (collision.gameObject.transform.position.x > transform.position.x)
             {
