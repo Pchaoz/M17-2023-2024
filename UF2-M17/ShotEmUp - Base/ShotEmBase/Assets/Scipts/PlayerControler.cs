@@ -190,7 +190,7 @@ public class PlayerControler : MonoBehaviour
         {
             isJumping = false;
         }
-        
+       
         if (collision.gameObject.tag == "Wall")
         {
             if (collision.gameObject.transform.position.x > transform.position.x)
