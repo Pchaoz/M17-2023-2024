@@ -185,9 +185,10 @@ public class PlayerControler : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("He tocado algo");
+        //Debug.Log("He tocado algo"); //ESTO ESTABA PARA HACER PRUEBAS
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ground")) 
         {
+            Debug.Log("JUMP RESET");
             isJumping = false;
         }
        
@@ -200,7 +201,10 @@ public class PlayerControler : MonoBehaviour
             {
                 canMoveBackwards = false;
             }
-           
+        }
+        if (collision.gameObject.tag == "Enemy")
+        {
+            //CODIGO TEMPORAL PARA HACER PRUEBAS CON LAS OLEADAS
         }
     }
 
