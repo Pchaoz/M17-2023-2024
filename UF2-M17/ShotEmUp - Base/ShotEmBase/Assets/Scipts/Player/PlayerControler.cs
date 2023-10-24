@@ -39,18 +39,12 @@ public class PlayerControler : MonoBehaviour
                 break;
 
             case States.RUN:
-                float PosToMNove = m_MovementAction.ReadValue<Vector2>().x;
-                //Debug.Log(PosToMNove); ESTO ESTABA DE PRUEBA PARA VER BIEN LOS INPUTS DE MOVIMIENTO
 
-                if (PosToMNove > 0 && canMoveFoward)
-                {
-                    m_Rb.velocity = new Vector2(PosToMNove * m_Ms, m_Rb.velocity.y); //LEER EL INPUT Y MOVERSE HACIA LA DERECHA
-                }
-                else if (PosToMNove < 0 && canMoveBackwards)
-                {
-                    m_Rb.velocity = new Vector2(PosToMNove * m_Ms, m_Rb.velocity.y); //LEER EL INPUT Y MOVERSE HACIA LA IZQUIERDA
-                }
-                
+                float PosToMNove = m_MovementAction.ReadValue<Vector2>().x; //LECTURA DEL INPUT SYSTEM
+                m_Rb.velocity = new Vector2(PosToMNove * m_Ms, m_Rb.velocity.y);  //MOVIMIENTO PERSONAJE
+
+                //Debug.Log(PosToMNove); ESTO ESTABA DE PRUEBA PARA VER BIEN LOS INPUTS DE MOVIMIENTO
+               
                 if (PosToMNove == 0)
                 {
                     ChangeState(States.IDLE);
@@ -167,6 +161,7 @@ public class PlayerControler : MonoBehaviour
     {
         UpdateState();
     }
+
 
     void Jump(InputAction.CallbackContext actionContext)
     {

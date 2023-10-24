@@ -56,7 +56,7 @@ public class Spawner : MonoBehaviour
         Debug.Log("YA HE SPAWNEADO A TODOS");
         if (m_AliveEnemies.Count == 0) //HASTA QUE NO HAYAN DESAPARECIDO TODOS LOS ENEMIGOS
         {
-            Debug.Log("HA ACABADO LA RONDA, PREPARATE PARA LA SIGUENTE");
+            Debug.Log("HA ACABADO LA RONDA, PREPARATE PARA LA SIGUENTE"); //TEST DEBUG
             //AVISO QUE LA RONDA HA ACABADO CON UN TEXTO O ALGO (HACE EVENTO)
             yield return new WaitForSeconds(30f); // 30 SEGUNDOS HASTA LA PROXIMA RONDA
             m_WaveSize += 2; //SPAWNEO 2 MAS LA PROXIMA RONDA
