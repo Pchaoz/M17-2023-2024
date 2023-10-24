@@ -54,20 +54,17 @@ public class Spawner : MonoBehaviour
     IEnumerator WaitNewWave()
     {
         Debug.Log("YA HE SPAWNEADO A TODOS");
-        while (m_SpawnedEnemies > 0) 
+        if (m_AliveEnemies.Count == 0) //HASTA QUE NO HAYAN DESAPARECIDO TODOS LOS ENEMIGOS
         {
-            if (m_AliveEnemies.Count == 0) //HASTA QUE NO HAYAN DESAPARECIDO TODOS LOS ENEMIGOS
-            {
-                Debug.Log("HA ACABADO LA RONDA, PREPARATE PARA LA SIGUENTE");
-                //AVISO QUE LA RONDA HA ACABADO CON UN TEXTO O ALGO (HACE EVENTO)
-                yield return new WaitForSeconds(30f); // 30 SEGUNDOS HASTA LA PROXIMA RONDA
-                m_WaveSize += 2; //SPAWNEO 2 MAS LA PROXIMA RONDA
-                m_SpawnedEnemies = 0; //REINICIO LA CANTIDAD DE ENEMIGOS QUE HE SPAWNEADO
-                m_AliveEnemies.Clear(); //NO DEBERIA HACER FALTA PORQUE TECNICAMENTE ESTA VACIA PERO POR SI ACASO LO HAGO
-                StartCoroutine(SpawnWave()); //ACTIVO LA COORUTINA DE SPAWN DE OLEADA
-            }
+            Debug.Log("HA ACABADO LA RONDA, PREPARATE PARA LA SIGUENTE");
+            //AVISO QUE LA RONDA HA ACABADO CON UN TEXTO O ALGO (HACE EVENTO)
+            yield return new WaitForSeconds(30f); // 30 SEGUNDOS HASTA LA PROXIMA RONDA
+            m_WaveSize += 2; //SPAWNEO 2 MAS LA PROXIMA RONDA
+            m_SpawnedEnemies = 0; //REINICIO LA CANTIDAD DE ENEMIGOS QUE HE SPAWNEADO
+            m_AliveEnemies.Clear(); //NO DEBERIA HACER FALTA PORQUE TECNICAMENTE ESTA VACIA PERO POR SI ACASO LO HAGO
+            StartCoroutine(SpawnWave()); //ACTIVO LA COORUTINA DE SPAWN DE OLEADA
         }
-       
+
     }
 
     //EL METODO QUE ELIMINA A LOS ENEMIGOS AL MORIR
