@@ -1385,6 +1385,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2241106148346584555, guid: be6126c18bf2a6a46b8a640ed2646931, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 6200000, guid: 47a03c4c35e68094a9bada187ad377b4, type: 2}
+    - target: {fileID: 3517148189570102007, guid: be6126c18bf2a6a46b8a640ed2646931, type: 3}
+      propertyPath: m_MaxJumpVelocity
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 4599415184313710036, guid: be6126c18bf2a6a46b8a640ed2646931, type: 3}
       propertyPath: m_RootOrder
       value: 2
