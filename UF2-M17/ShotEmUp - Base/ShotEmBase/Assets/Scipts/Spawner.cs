@@ -60,8 +60,10 @@ public class Spawner : MonoBehaviour
             //AVISO QUE LA RONDA HA ACABADO CON UN TEXTO O ALGO (HACE EVENTO)
             yield return new WaitForSeconds(30f); // 30 SEGUNDOS HASTA LA PROXIMA RONDA
             m_WaveSize += 2; //SPAWNEO 2 MAS LA PROXIMA RONDA
+            m_Round++; //INCREMENTA EL NUMERO DE RONDAS QUE HAS SOBREVIVIDO
             m_SpawnedEnemies = 0; //REINICIO LA CANTIDAD DE ENEMIGOS QUE HE SPAWNEADO
             m_AliveEnemies.Clear(); //NO DEBERIA HACER FALTA PORQUE TECNICAMENTE ESTA VACIA PERO POR SI ACASO LO HAGO
+            //ME FALTA UN EVENTO QUE AVISE A LA GUI DE QUE HA CAMBIADO LA RONDA
             StartCoroutine(SpawnWave()); //ACTIVO LA COORUTINA DE SPAWN DE OLEADA
         }
 
