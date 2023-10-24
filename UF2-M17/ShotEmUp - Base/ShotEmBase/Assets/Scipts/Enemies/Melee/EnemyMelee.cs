@@ -34,7 +34,7 @@ public class EnemyMelee : MonoBehaviour, CanDie //INTERFAZ PARA QUE LOS ENEMIGOS
                 Vector2 actualPos = transform.position; //MI POSICION
                 Vector2 playerPos = m_Target.transform.position; //LA DEL ENEMIGO
 
-                Vector3 follow = (actualPos - playerPos); //CALCULAS HACIA DONDE ES
+                Vector3 follow = (playerPos - actualPos); //CALCULAS HACIA DONDE ES
                 m_Rb.velocity = new Vector2(follow.x * m_Ms, m_Rb.velocity.y); //LO SIGUES
                 break;
             case States.HIT:

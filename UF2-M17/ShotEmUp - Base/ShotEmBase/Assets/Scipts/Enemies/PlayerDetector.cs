@@ -11,7 +11,6 @@ public class PlayerDetector : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            Debug.Log("HE PILLADO AL PLAYER");
             FollowPlayerEvent?.Invoke(collision.gameObject);
         }
     }
