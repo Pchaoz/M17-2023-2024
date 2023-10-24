@@ -75,5 +75,12 @@ PROTAGONISTA:
 OTROS:
 
 	- GUI que muestre la vida del Jugador y numero de oleada ( LAS OLEADAS SOLO SE ACTUALIZAN POR G.E O DELEGADO) 
+
+
+
+
+EXTRA (NO PRIORIZAR):
+
+	- Que el spawner haga particulas al spawnear un enemigo 
 	
 	
