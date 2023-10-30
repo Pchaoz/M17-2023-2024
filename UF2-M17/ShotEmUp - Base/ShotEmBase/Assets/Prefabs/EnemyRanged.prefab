@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 613378623395495913}
   - component: {fileID: 734660028117177561}
+  - component: {fileID: 965671507497152126}
   m_Layer: 7
   m_Name: DetectionRange
   m_TagString: Untagged
@@ -77,6 +78,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &965671507497152126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4966141334697257041}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c928acc650a8c0f4f9b05ca73b19082c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7803951270677212625
 GameObject:
   m_ObjectHideFlags: 0
@@ -87,6 +100,7 @@ GameObject:
   m_Component:
   - component: {fileID: 113534207754682064}
   - component: {fileID: 235585916123989779}
+  - component: {fileID: 3105918449035749279}
   m_Layer: 7
   m_Name: HitRange
   m_TagString: Untagged
@@ -154,6 +168,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &3105918449035749279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7803951270677212625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3291bfe52ace0214da9eb8178ad468f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8973223828014086124
 GameObject:
   m_ObjectHideFlags: 0
@@ -255,6 +281,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ef8e1acb6418d34e9c3bb044385ee55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_DamageEvent: {fileID: 11400000, guid: 566ff8f2377a86c4d871b13be0c453db, type: 2}
+  m_Ms: 1
+  m_Damage: 2
+  m_DetectionRange: {fileID: 4966141334697257041}
+  m_HitRange: {fileID: 7803951270677212625}
+  m_BulletPrefab: {fileID: 2643363666808880351, guid: 77e777d98e701874494969db944c9899, type: 3}
 --- !u!50 &-6435749259875962036
 Rigidbody2D:
   serializedVersion: 4

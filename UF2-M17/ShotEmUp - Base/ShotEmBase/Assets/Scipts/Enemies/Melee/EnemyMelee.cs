@@ -38,7 +38,7 @@ public class EnemyMelee : MonoBehaviour, CanDie //INTERFAZ PARA QUE LOS ENEMIGOS
                 m_Rb.velocity = new Vector2(follow.x * m_Ms, m_Rb.velocity.y); //LO SIGUES
                 break;
             case States.HIT:
-
+               
                 break;
         }
     }
@@ -79,21 +79,29 @@ public class EnemyMelee : MonoBehaviour, CanDie //INTERFAZ PARA QUE LOS ENEMIGOS
 
 
     public event Action<GameObject> DeathEvent; //DELEGADO DE MUERTE DEL ENEMIGO
-    private Rigidbody2D m_Rb; //EL RIGIDBODY
+    [SerializeField]
+    private GameEvent1Int m_DamageEvent; //EVENTO CON EL QUE PEGA AL PLAYER
 
+    private Rigidbody2D m_Rb; //EL RIGIDBODY
+    
     private GameObject m_Target;
     private float m_WhereToGo; //DIRECCION A LA QUE IRA CADA VEZ QUE ENTRE EN EL METODO PATRULLA (SOLO DEBERIA ENTRAR UNA VEZ)
     [SerializeField]
     private float m_Ms; //MOVEMENT SPEED
+    [SerializeField]
+    private int m_Damage;
 
     [SerializeField]
     private GameObject m_DetectionRange;
+    [SerializeField]
+    private GameObject m_HitRange;
 
     private void Start()
     {
         m_Rb = GetComponent<Rigidbody2D>();
         InitState(States.RUN);
-        m_DetectionRange.GetComponent<PlayerDetector>().FollowPlayerEvent += PlayerDetected;
+        m_DetectionRange.GetComponent<EnemyDetector>().FollowPlayerEvent += PlayerDetected;
+        m_HitRange.GetComponent<EnemyHit>().HitPlayerEvent += PlayerAttack;
     }
 
     private void PlayerDetected(GameObject obj)
@@ -101,7 +109,17 @@ public class EnemyMelee : MonoBehaviour, CanDie //INTERFAZ PARA QUE LOS ENEMIGOS
         m_Target = obj;
         InitState(States.FOLLOW);
     }
-
+    private void PlayerAttack(bool c)
+    {
+        Debug.Log("ATACO?" + c);
+        if (c)
+        {
+            InitState(States.HIT); //LE PEGO
+        }else if (!c)
+        {
+            InitState(States.FOLLOW);  // SE HA SALIDO DEL RANGO VUELVO A SEGUIRLO
+        }
+    }
     private void Update()
     {
         UpdateState();
@@ -109,7 +127,6 @@ public class EnemyMelee : MonoBehaviour, CanDie //INTERFAZ PARA QUE LOS ENEMIGOS
 
     void OnDeath() //EVENTO O DELEGADO EN EL QUE AVISARA QUE HA MUERTO
     {
-        m_DetectionRange.GetComponent<PlayerDetector>().FollowPlayerEvent += PlayerDetected;
         DeathEvent?.Invoke(this.gameObject); //ME MUERO ASI QUE AVISO PARA BORRARME DE LA LISTA
         Destroy(this.gameObject); //ME MUERO :(
     }
@@ -120,14 +137,16 @@ public class EnemyMelee : MonoBehaviour, CanDie //INTERFAZ PARA QUE LOS ENEMIGOS
         {
             m_WhereToGo = m_WhereToGo * -1;
         }
-        
+
         if (collision.gameObject.tag == "Player")
         {
-            //CODIGO TEMPORAL PARA HACER PRUEBAS CON LAS OLEADAS
+            m_DamageEvent.Raise(m_Damage); //PEGO AL PLAYER
             OnDeath();
         }
     }
-
-    
-
+    private void OnDestroy()
+    {
+        m_DetectionRange.GetComponent<EnemyDetector>().FollowPlayerEvent -= PlayerDetected; //ME DESSUCRIBO PORQUE SI ME MUERO YA NO HACE FALTA NINGUN EVENTO
+        m_HitRange.GetComponent<EnemyHit>().HitPlayerEvent -= PlayerAttack; //ME DESSUCRIBO PORQUE SI ME MUERO YA NO HACE FALTA NINGUN EVENTO
+    }
 }

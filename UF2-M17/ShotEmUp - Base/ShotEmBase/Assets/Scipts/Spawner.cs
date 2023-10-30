@@ -16,6 +16,8 @@ public class Spawner : MonoBehaviour
     private int m_SpawnedEnemies;
     [SerializeField]
     private List<GameObject> m_AliveEnemies; //LISTA CON LOS ENEMIGOS QUE ESTAN VIVOS
+    [SerializeField]
+    private float m_RoundsCD;
 
     private void Start()
     {
@@ -58,7 +60,7 @@ public class Spawner : MonoBehaviour
         {
             Debug.Log("HA ACABADO LA RONDA, PREPARATE PARA LA SIGUENTE"); //TEST DEBUG
             //AVISO QUE LA RONDA HA ACABADO CON UN TEXTO O ALGO (HACE EVENTO)
-            yield return new WaitForSeconds(30f); // 30 SEGUNDOS HASTA LA PROXIMA RONDA
+            yield return new WaitForSeconds(m_RoundsCD); // 30 SEGUNDOS HASTA LA PROXIMA RONDA
             m_WaveSize += 2; //SPAWNEO 2 MAS LA PROXIMA RONDA
             m_Round++; //INCREMENTA EL NUMERO DE RONDAS QUE HAS SOBREVIVIDO
             m_SpawnedEnemies = 0; //REINICIO LA CANTIDAD DE ENEMIGOS QUE HE SPAWNEADO

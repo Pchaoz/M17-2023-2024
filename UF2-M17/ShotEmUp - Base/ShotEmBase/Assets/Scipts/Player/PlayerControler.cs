@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
@@ -132,8 +133,6 @@ public class PlayerControler : MonoBehaviour
     private int m_JumpForce;
 
     private bool isJumping;
-    private bool canMoveFoward;
-    private bool canMoveBackwards;
 
     //RIGIDBODY AND STUFF
     private Rigidbody2D m_Rb;
@@ -149,8 +148,6 @@ public class PlayerControler : MonoBehaviour
 
         m_Rb = GetComponent<Rigidbody2D>();
         m_ColliderBottom = Vector3.up * GetComponent<BoxCollider2D>().size.y / 2; //LA PART DE ABAIX DEl COLLIDER
-        canMoveFoward = true;
-        canMoveBackwards = true;
     }
 
     private void Start()
@@ -162,7 +159,17 @@ public class PlayerControler : MonoBehaviour
         UpdateState();
     }
 
+    public void GetHit(int damage)
+    {
+        Debug.Log("He rebut: " + damage + " de mal");
+        m_Hp -= damage;
 
+        if (m_Hp == 0 || m_Hp < 0)
+        {
+            //ME MUERO Y PASAN COSAS
+            Destroy(this.gameObject);
+        }
+    }
     void Jump(InputAction.CallbackContext actionContext)
     {
         if (!isJumping)
@@ -186,38 +193,11 @@ public class PlayerControler : MonoBehaviour
             Debug.Log("JUMP RESET");
             isJumping = false;
         }
-       
-        if (collision.gameObject.tag == "Wall")
-        {
-            if (collision.gameObject.transform.position.x > transform.position.x)
-            {
-                canMoveFoward = false;
-            }else
-            {
-                canMoveBackwards = false;
-            }
-        }
-        if (collision.gameObject.tag == "Enemy")
-        {
-            //CODIGO TEMPORAL PARA HACER PRUEBAS CON LAS OLEADAS
-        }
     }
-
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-         if (collision.gameObject.tag == "Wall")
-         {
-            canMoveBackwards = true;           
-            canMoveFoward = true;
-         }
-    }
-
     private void OnDestroy()
     {
         //m_Input.FindActionMap("Standard").FindAction("Attack").performed -= AttackAction; //SUBSTITUIR POR EL MIO CUANDO PEGUE
         m_Input.FindActionMap("Movement").FindAction("Jump").performed -= Jump;
         m_Input.FindActionMap("Movement").Disable();
     }
-
-
 }
