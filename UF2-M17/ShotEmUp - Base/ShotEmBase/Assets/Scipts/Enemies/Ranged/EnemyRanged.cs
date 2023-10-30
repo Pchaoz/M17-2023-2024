@@ -105,6 +105,8 @@ public class EnemyRanged : MonoBehaviour, CanDie
     private GameObject m_HitRange;
     [SerializeField]
     private GameObject m_BulletPrefab;
+    [SerializeField]
+    private int m_Hp;
 
     private void Start()
     {

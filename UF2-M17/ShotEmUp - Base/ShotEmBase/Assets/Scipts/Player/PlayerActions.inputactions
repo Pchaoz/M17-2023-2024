@@ -24,9 +24,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Shoot",
+                    "name": "LightHit",
                     "type": "Button",
                     "id": "2995271d-bf90-47d4-bef3-28694d9751c1",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "HeavyHit",
+                    "type": "Button",
+                    "id": "b6006d4a-e828-4816-b466-4c8c54a1816b",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -52,7 +61,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
-                    "action": "Shoot",
+                    "action": "LightHit",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -110,6 +119,17 @@
                     "action": "Walk",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "cdd85bb7-9cbc-4cb2-9f59-61852e531cb7",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "HeavyHit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

@@ -12,9 +12,11 @@ public class PlayerControler : MonoBehaviour
     //STATE MACHINE STUFF
 
     //STATES
-    private enum States { NONE, IDLE, RUN, JUMP, HIT, HITCMB };
+    private enum States { NONE, IDLE, RUN, JUMP, LIGHTHIT, HEAVYHIT, HITCMB };
     private States m_CurrentState;
-    private bool canCombo;
+    private bool canLightCombo;
+    private bool canHardCombo;
+    private Animator m_Animator;
 
     private void ChangeState(States newState)
     {
@@ -42,6 +44,15 @@ public class PlayerControler : MonoBehaviour
             case States.RUN:
 
                 float PosToMNove = m_MovementAction.ReadValue<Vector2>().x; //LECTURA DEL INPUT SYSTEM
+
+                if (PosToMNove == -1)
+                {
+                    transform.eulerAngles = Vector3.up * 180;
+;                }
+                else if (PosToMNove == 1)
+                {
+                    transform.eulerAngles = Vector3.zero;
+                }
                 m_Rb.velocity = new Vector2(PosToMNove * m_Ms, m_Rb.velocity.y);  //MOVIMIENTO PERSONAJE
 
                 //Debug.Log(PosToMNove); ESTO ESTABA DE PRUEBA PARA VER BIEN LOS INPUTS DE MOVIMIENTO
@@ -53,13 +64,14 @@ public class PlayerControler : MonoBehaviour
                 break;
 
             case States.JUMP:
-                if (!isJumping)
-                {
-                    //RAYCAST PARA EL SUELO Y SALTAR?? MIRAR DEL AÑO PASADO
-                }
                 break;
 
-            case States.HIT:
+            case States.LIGHTHIT:
+                SendDamage(m_LightDmg);
+                break;
+
+            case States.HEAVYHIT:
+                SendDamage(m_HeavyDmg);
                 break;
 
             case States.HITCMB:
@@ -76,18 +88,26 @@ public class PlayerControler : MonoBehaviour
 
                 m_Rb.velocity = Vector2.zero;
                 //REPRODUCIR ANIMACION DE IDLE
+                m_Animator.Play("Player_Idle");
                 break;
 
             case States.RUN:
                 //REPRODUCIR ANIMACION DE CORRER
+                m_Animator.Play("Player_Walk");
                 break;
             case States.JUMP:
                 //REPRODUCIR ANIMACION DE SALTO
+                //m_Animator.Play("Player_Jump");
                 break;
-            case States.HIT:
+            case States.LIGHTHIT:
                 m_Rb.velocity = Vector2.zero; //PEGA QUIETO
                 //REPRODUCIR ANIMACION GOLPE 1
-                canCombo = false; //PORQUE SOLO EN UN MOMENTO PRECISO DE LA ANIMACION PODRA ACTIVAR LA POSIBILIDAD DE HACER EL COMBO
+                m_Animator.Play("Player_LightHit");
+                break;
+            case States.HEAVYHIT:
+                m_Rb.velocity = Vector2.zero; //PEGA QUIETO
+                //REPRODUCIR ANIMACION GOLPE 2
+                m_Animator.Play("Player_HeavyHit");
                 break;
         }
     }
@@ -104,7 +124,10 @@ public class PlayerControler : MonoBehaviour
             case States.JUMP:
                 break;
 
-            case States.HIT:
+            case States.LIGHTHIT:
+                break;
+
+            case States.HEAVYHIT:
                 break;
 
             case States.HITCMB:
@@ -126,7 +149,9 @@ public class PlayerControler : MonoBehaviour
     [SerializeField]
     private int m_Ms;
     [SerializeField]
-    private int m_NormalDamage;
+    private int m_LightDmg;
+    [SerializeField]
+    private int m_HeavyDmg;
     [SerializeField]
     private int m_ComboDamage;
     [SerializeField]
@@ -137,6 +162,9 @@ public class PlayerControler : MonoBehaviour
     //RIGIDBODY AND STUFF
     private Rigidbody2D m_Rb;
 
+    [SerializeField]
+    private GameObject m_Hitbox;
+
     private Vector3 m_ColliderBottom;
     private void Awake()
     {
@@ -144,8 +172,11 @@ public class PlayerControler : MonoBehaviour
         m_Input = Instantiate(m_InputAsset);
         m_MovementAction = m_Input.FindActionMap("Movement").FindAction("Walk");
         m_Input.FindActionMap("Movement").FindAction("Jump").performed += Jump;
+        m_Input.FindActionMap("Movement").FindAction("LightHit").performed += LightHit;
+        m_Input.FindActionMap("Movement").FindAction("HeavyHit").performed += HeavyHit;
         m_Input.FindActionMap("Movement").Enable();
 
+        m_Animator = GetComponent<Animator>();
         m_Rb = GetComponent<Rigidbody2D>();
         m_ColliderBottom = Vector3.up * GetComponent<BoxCollider2D>().size.y / 2; //LA PART DE ABAIX DEl COLLIDER
     }
@@ -159,6 +190,19 @@ public class PlayerControler : MonoBehaviour
         UpdateState();
     }
 
+    public void ReturnToIdle()
+    {
+        ChangeState(States.IDLE);
+    }
+
+    public void OpenLightCombo()
+    {
+        canLightCombo = true;
+    }
+    public void CloseLightCombo()
+    {
+        canLightCombo = false;
+    }
     public void GetHit(int damage)
     {
         Debug.Log("He rebut: " + damage + " de mal");
@@ -170,7 +214,26 @@ public class PlayerControler : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
-    void Jump(InputAction.CallbackContext actionContext)
+
+    private void SendDamage(int dmg)
+    {
+        m_Hitbox.GetComponent<HitBoxController>().LoadDamage(dmg);
+    }
+    private void HeavyHit(InputAction.CallbackContext actionContext)
+    {
+        if (m_CurrentState != States.JUMP || m_CurrentState != States.LIGHTHIT || m_CurrentState != States.HEAVYHIT)
+        {
+            ChangeState(States.HEAVYHIT);
+        }
+    }
+    private void LightHit(InputAction.CallbackContext actionContext)
+    {
+        if (m_CurrentState != States.JUMP || m_CurrentState != States.LIGHTHIT || m_CurrentState != States.HEAVYHIT)
+        {
+            ChangeState(States.LIGHTHIT);
+        }
+    }
+    private void Jump(InputAction.CallbackContext actionContext)
     {
         if (!isJumping)
         {

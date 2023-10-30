@@ -8,7 +8,7 @@ public class EnemyMelee : MonoBehaviour, CanDie //INTERFAZ PARA QUE LOS ENEMIGOS
     //STATE MACHINE STUFF
 
     //STATES
-    private enum States { NONE, RUN, FOLLOW, HIT };
+    private enum States { NONE, RUN, IDLE, FOLLOW, HIT };
     private States m_CurrentState;
 
     private void ChangeState(States newState)
@@ -26,19 +26,39 @@ public class EnemyMelee : MonoBehaviour, CanDie //INTERFAZ PARA QUE LOS ENEMIGOS
 
         switch (m_CurrentState)
         {
+            case States.IDLE:
+
+                break;
             case States.RUN:
                 m_Rb.velocity = new Vector2(m_WhereToGo * m_Ms, m_Rb.velocity.y);
+
+                if (m_WhereToGo == -1)
+                {
+                    transform.eulerAngles = Vector3.up * 180;
+                    ;
+                }
+                else if (m_WhereToGo == 1)
+                {
+                    transform.eulerAngles = Vector3.zero;
+                }
                 break;
 
             case States.FOLLOW:
-                Vector2 actualPos = transform.position; //MI POSICION
-                Vector2 playerPos = m_Target.transform.position; //LA DEL ENEMIGO
 
-                Vector3 follow = (playerPos - actualPos); //CALCULAS HACIA DONDE ES
-                m_Rb.velocity = new Vector2(follow.x * m_Ms, m_Rb.velocity.y); //LO SIGUES
+                if (m_Target  != null)
+                {
+                    Vector2 actualPos = transform.position; //MI POSICION
+                    Vector2 playerPos = m_Target.transform.position; //LA DEL ENEMIGO
+
+                    Vector3 follow = (playerPos - actualPos).normalized ; //CALCULAS HACIA DONDE ES
+                    m_Rb.velocity = new Vector2(follow.x * m_Ms, m_Rb.velocity.y); //LO SIGUES
+                }else
+                {
+                    //DOES NOTHING
+                }
+               
                 break;
             case States.HIT:
-               
                 break;
         }
     }
@@ -48,16 +68,26 @@ public class EnemyMelee : MonoBehaviour, CanDie //INTERFAZ PARA QUE LOS ENEMIGOS
 
         switch (m_CurrentState)
         {
+            case States.IDLE:
+                m_Rb.velocity = Vector3.zero;
+                m_Animator.Play("Enemy_Idle");
+                //REPRODUCIR ANIMACION DE IDLE
+                break;
             case States.RUN:
                 m_WhereToGo = -1;
                 //REPRODUCIR ANIMACION DE MOVERSE
+                m_Animator.Play("Enemy_Walk");
                 break;
             case States.FOLLOW:
                 //REPRODUCIR ANIMACION DE MOVERSE
+                m_Animator.Play("Enemy_Walk");
                 break;
             case States.HIT:
+               
                 m_Rb.velocity = Vector2.zero; //PEGA QUIETO
-                //REPRODUCIR ANIMACION GOLPE
+                SendDamage(m_Damage);
+                m_Animator.Play("Enemy_Melee");  //REPRODUCIR ANIMACION GOLPE
+
                 break;
         }
     }
@@ -90,14 +120,21 @@ public class EnemyMelee : MonoBehaviour, CanDie //INTERFAZ PARA QUE LOS ENEMIGOS
     private float m_Ms; //MOVEMENT SPEED
     [SerializeField]
     private int m_Damage;
+    [SerializeField]
+    private int m_Hp;
 
     [SerializeField]
     private GameObject m_DetectionRange;
     [SerializeField]
     private GameObject m_HitRange;
+    [SerializeField]
+    private GameObject m_Hitbox;
+    private Animator m_Animator;
+
 
     private void Start()
     {
+        m_Animator = GetComponent<Animator>();
         m_Rb = GetComponent<Rigidbody2D>();
         InitState(States.RUN);
         m_DetectionRange.GetComponent<EnemyDetector>().FollowPlayerEvent += PlayerDetected;
@@ -107,22 +144,35 @@ public class EnemyMelee : MonoBehaviour, CanDie //INTERFAZ PARA QUE LOS ENEMIGOS
     private void PlayerDetected(GameObject obj)
     {
         m_Target = obj;
-        InitState(States.FOLLOW);
+        ChangeState(States.FOLLOW);
     }
     private void PlayerAttack(bool c)
     {
-        Debug.Log("ATACO?" + c);
         if (c)
         {
-            InitState(States.HIT); //LE PEGO
+            ChangeState(States.HIT); //LE PEGO
         }else if (!c)
         {
-            InitState(States.FOLLOW);  // SE HA SALIDO DEL RANGO VUELVO A SEGUIRLO
+            ChangeState(States.FOLLOW);  // SE HA SALIDO DEL RANGO VUELVO A SEGUIRLO
+        }
+    }
+    private void SendDamage(int dmg)
+    {
+        m_Hitbox.GetComponent<HitBoxController>().LoadDamage(dmg);
+    }
+    private void ReciveDamage(int dmg)
+    {
+        m_Hp -= dmg;
+
+        if (m_Hp < 1)
+        {
+            OnDeath();
         }
     }
     private void Update()
     {
         UpdateState();
+        Debug.Log(m_CurrentState);
     }
 
     void OnDeath() //EVENTO O DELEGADO EN EL QUE AVISARA QUE HA MUERTO
@@ -130,18 +180,24 @@ public class EnemyMelee : MonoBehaviour, CanDie //INTERFAZ PARA QUE LOS ENEMIGOS
         DeathEvent?.Invoke(this.gameObject); //ME MUERO ASI QUE AVISO PARA BORRARME DE LA LISTA
         Destroy(this.gameObject); //ME MUERO :(
     }
+    public void ReturnToIdle()
+    {
+        ChangeState(States.IDLE);
+    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Wall") 
         {
-            m_WhereToGo = m_WhereToGo * -1;
+            m_WhereToGo = m_WhereToGo * -1;            
         }
-
-        if (collision.gameObject.tag == "Player")
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "PlayerHitbox")
         {
-            m_DamageEvent.Raise(m_Damage); //PEGO AL PLAYER
-            OnDeath();
+            int dmg = collision.gameObject.GetComponent<HitBoxController>().m_Damage;
+            ReciveDamage(dmg);
         }
     }
     private void OnDestroy()

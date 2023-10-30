@@ -193,6 +193,7 @@ GameObject:
   - component: {fileID: 3166463751642187832}
   - component: {fileID: -6435749259875962036}
   - component: {fileID: 7922213129597857523}
+  - component: {fileID: 3702407274542406823}
   m_Layer: 7
   m_Name: EnemyRanged
   m_TagString: Untagged
@@ -258,7 +259,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
+  m_Sprite: {fileID: 499963059, guid: 70f49bc26f323ed4fb14facbeb19dc6d, type: 3}
   m_Color: {r: 0.504717, g: 1, b: 0.99483085, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -287,6 +288,7 @@ MonoBehaviour:
   m_DetectionRange: {fileID: 4966141334697257041}
   m_HitRange: {fileID: 7803951270677212625}
   m_BulletPrefab: {fileID: 2643363666808880351, guid: 77e777d98e701874494969db944c9899, type: 3}
+  m_Hp: 5
 --- !u!50 &-6435749259875962036
 Rigidbody2D:
   serializedVersion: 4
@@ -349,3 +351,24 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 1, y: 2}
   m_Direction: 0
+--- !u!95 &3702407274542406823
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8973223828014086124}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

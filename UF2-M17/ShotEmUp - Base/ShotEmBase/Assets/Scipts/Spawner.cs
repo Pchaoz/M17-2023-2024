@@ -59,7 +59,7 @@ public class Spawner : MonoBehaviour
         if (m_AliveEnemies.Count == 0) //HASTA QUE NO HAYAN DESAPARECIDO TODOS LOS ENEMIGOS
         {
             Debug.Log("HA ACABADO LA RONDA, PREPARATE PARA LA SIGUENTE"); //TEST DEBUG
-            //AVISO QUE LA RONDA HA ACABADO CON UN TEXTO O ALGO (HACE EVENTO)
+                                                                          //AVISO QUE LA RONDA HA ACABADO CON UN TEXTO O ALGO (HACE EVENTO)
             yield return new WaitForSeconds(m_RoundsCD); // 30 SEGUNDOS HASTA LA PROXIMA RONDA
             m_WaveSize += 2; //SPAWNEO 2 MAS LA PROXIMA RONDA
             m_Round++; //INCREMENTA EL NUMERO DE RONDAS QUE HAS SOBREVIVIDO
@@ -68,7 +68,6 @@ public class Spawner : MonoBehaviour
             //ME FALTA UN EVENTO QUE AVISE A LA GUI DE QUE HA CAMBIADO LA RONDA
             StartCoroutine(SpawnWave()); //ACTIVO LA COORUTINA DE SPAWN DE OLEADA
         }
-
     }
 
     //EL METODO QUE ELIMINA A LOS ENEMIGOS AL MORIR
