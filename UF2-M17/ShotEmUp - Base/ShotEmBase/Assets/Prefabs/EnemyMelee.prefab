@@ -132,7 +132,7 @@ GameObject:
   - component: {fileID: 3831886500698276607}
   m_Layer: 7
   m_Name: Hitbox
-  m_TagString: Untagged
+  m_TagString: EnemyHitBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -458,7 +458,7 @@ Transform:
   m_GameObject: {fileID: 4866479534824940413}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 5.669672, y: 1.4504102, z: 1}
+  m_LocalScale: {x: 2.7639651, y: 1.4504102, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5621514973037042462}

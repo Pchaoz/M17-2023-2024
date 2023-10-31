@@ -16,11 +16,4 @@ public class EnemyHit : MonoBehaviour
             HitPlayerEvent?.Invoke(true);
         }
     }
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.gameObject.tag == "Player")
-        {
-            HitPlayerEvent?.Invoke(false);
-        }
-    }
 }

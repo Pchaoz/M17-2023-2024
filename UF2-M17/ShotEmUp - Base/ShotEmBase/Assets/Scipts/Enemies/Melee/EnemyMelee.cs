@@ -51,6 +51,16 @@ public class EnemyMelee : MonoBehaviour, CanDie //INTERFAZ PARA QUE LOS ENEMIGOS
                     Vector2 playerPos = m_Target.transform.position; //LA DEL ENEMIGO
 
                     Vector3 follow = (playerPos - actualPos).normalized ; //CALCULAS HACIA DONDE ES
+
+                    if (playerPos.x < actualPos.x)
+                    {
+                        transform.eulerAngles = Vector3.up * 180;
+                        ;
+                    }
+                    else if (playerPos.x > actualPos.x)
+                    {
+                        transform.eulerAngles = Vector3.zero;
+                    }
                     m_Rb.velocity = new Vector2(follow.x * m_Ms, m_Rb.velocity.y); //LO SIGUES
                 }else
                 {
@@ -151,9 +161,6 @@ public class EnemyMelee : MonoBehaviour, CanDie //INTERFAZ PARA QUE LOS ENEMIGOS
         if (c)
         {
             ChangeState(States.HIT); //LE PEGO
-        }else if (!c)
-        {
-            ChangeState(States.FOLLOW);  // SE HA SALIDO DEL RANGO VUELVO A SEGUIRLO
         }
     }
     private void SendDamage(int dmg)
@@ -172,7 +179,7 @@ public class EnemyMelee : MonoBehaviour, CanDie //INTERFAZ PARA QUE LOS ENEMIGOS
     private void Update()
     {
         UpdateState();
-        Debug.Log(m_CurrentState);
+        //Debug.Log(m_CurrentState);
     }
 
     void OnDeath() //EVENTO O DELEGADO EN EL QUE AVISARA QUE HA MUERTO
@@ -180,9 +187,9 @@ public class EnemyMelee : MonoBehaviour, CanDie //INTERFAZ PARA QUE LOS ENEMIGOS
         DeathEvent?.Invoke(this.gameObject); //ME MUERO ASI QUE AVISO PARA BORRARME DE LA LISTA
         Destroy(this.gameObject); //ME MUERO :(
     }
-    public void ReturnToIdle()
+    public void ReturnToFollow()
     {
-        ChangeState(States.IDLE);
+        ChangeState(States.FOLLOW);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -194,8 +201,9 @@ public class EnemyMelee : MonoBehaviour, CanDie //INTERFAZ PARA QUE LOS ENEMIGOS
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "PlayerHitbox")
+        if (collision.gameObject.tag == "PlayerHitBox")
         {
+            Debug.Log("Me ha pegado el player");
             int dmg = collision.gameObject.GetComponent<HitBoxController>().m_Damage;
             ReciveDamage(dmg);
         }

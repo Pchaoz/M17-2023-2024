@@ -163,6 +163,9 @@ public class PlayerControler : MonoBehaviour
     private Rigidbody2D m_Rb;
 
     [SerializeField]
+    private GameEvent1Int OnHpChange;
+
+    [SerializeField]
     private GameObject m_Hitbox;
 
     private Vector3 m_ColliderBottom;
@@ -184,6 +187,7 @@ public class PlayerControler : MonoBehaviour
     private void Start()
     {
         InitState(States.IDLE);
+        OnHpChange.Raise(m_Hp);
     }
     void Update()
     {
@@ -203,10 +207,11 @@ public class PlayerControler : MonoBehaviour
     {
         canLightCombo = false;
     }
-    public void GetHit(int damage)
+    public void ReciveDamage(int damage)
     {
         Debug.Log("He rebut: " + damage + " de mal");
         m_Hp -= damage;
+        OnHpChange.Raise(m_Hp);
 
         if (m_Hp == 0 || m_Hp < 0)
         {
@@ -253,13 +258,23 @@ public class PlayerControler : MonoBehaviour
         //Debug.Log("He tocado algo"); //ESTO ESTABA PARA HACER PRUEBAS
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ground")) 
         {
-            Debug.Log("JUMP RESET");
+            //Debug.Log("JUMP RESET");
             isJumping = false;
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "EnemyHitBox")
+        {
+            int dmg = collision.gameObject.GetComponent<HitBoxController>().m_Damage;
+            ReciveDamage(dmg);
         }
     }
     private void OnDestroy()
     {
-        //m_Input.FindActionMap("Standard").FindAction("Attack").performed -= AttackAction; //SUBSTITUIR POR EL MIO CUANDO PEGUE
+        m_Input.FindActionMap("Movement").FindAction("LightHit").performed -= LightHit;
+        m_Input.FindActionMap("Movement").FindAction("HeavyHit").performed -= HeavyHit;
         m_Input.FindActionMap("Movement").FindAction("Jump").performed -= Jump;
         m_Input.FindActionMap("Movement").Disable();
     }

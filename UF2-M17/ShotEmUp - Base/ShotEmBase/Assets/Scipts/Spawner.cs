@@ -49,25 +49,21 @@ public class Spawner : MonoBehaviour
             m_SpawnedEnemies++; //AÑADO UN ENEMIGO SPAWNEADO A LA LISTA
             yield return new WaitForSeconds(m_SpawnCD); //ESPERO PARA SPAWNEAR AL SIGUIENTE
         }
-        StartCoroutine(WaitNewWave()); //ACTIVO LA COORUTINA DE ESPERA ENTRE RONDAS
+        
     }
 
     //HACE UNA PAUSA ENTRE OLEADA Y OLEADA PARA QUE AL JUGADOR LE DE TIEMPO A RESPIRAR UN POCO
     IEnumerator WaitNewWave()
     {
-        Debug.Log("YA HE SPAWNEADO A TODOS");
-        if (m_AliveEnemies.Count == 0) //HASTA QUE NO HAYAN DESAPARECIDO TODOS LOS ENEMIGOS
-        {
-            Debug.Log("HA ACABADO LA RONDA, PREPARATE PARA LA SIGUENTE"); //TEST DEBUG
-                                                                          //AVISO QUE LA RONDA HA ACABADO CON UN TEXTO O ALGO (HACE EVENTO)
-            yield return new WaitForSeconds(m_RoundsCD); // 30 SEGUNDOS HASTA LA PROXIMA RONDA
-            m_WaveSize += 2; //SPAWNEO 2 MAS LA PROXIMA RONDA
-            m_Round++; //INCREMENTA EL NUMERO DE RONDAS QUE HAS SOBREVIVIDO
-            m_SpawnedEnemies = 0; //REINICIO LA CANTIDAD DE ENEMIGOS QUE HE SPAWNEADO
-            m_AliveEnemies.Clear(); //NO DEBERIA HACER FALTA PORQUE TECNICAMENTE ESTA VACIA PERO POR SI ACASO LO HAGO
-            //ME FALTA UN EVENTO QUE AVISE A LA GUI DE QUE HA CAMBIADO LA RONDA
-            StartCoroutine(SpawnWave()); //ACTIVO LA COORUTINA DE SPAWN DE OLEADA
-        }
+        Debug.Log("HA ACABADO LA RONDA, PREPARATE PARA LA SIGUENTE"); //TEST DEBUG
+                                                                      //AVISO QUE LA RONDA HA ACABADO CON UN TEXTO O ALGO (HACE EVENTO)
+        yield return new WaitForSeconds(m_RoundsCD); // 30 SEGUNDOS HASTA LA PROXIMA RONDA
+        m_WaveSize += 2; //SPAWNEO 2 MAS LA PROXIMA RONDA
+        m_Round++; //INCREMENTA EL NUMERO DE RONDAS QUE HAS SOBREVIVIDO
+        m_SpawnedEnemies = 0; //REINICIO LA CANTIDAD DE ENEMIGOS QUE HE SPAWNEADO
+        m_AliveEnemies.Clear(); //NO DEBERIA HACER FALTA PORQUE TECNICAMENTE ESTA VACIA PERO POR SI ACASO LO HAGO
+                                //ME FALTA UN EVENTO QUE AVISE A LA GUI DE QUE HA CAMBIADO LA RONDA
+        StartCoroutine(SpawnWave()); //ACTIVO LA COORUTINA DE SPAWN DE OLEADA
     }
 
     //EL METODO QUE ELIMINA A LOS ENEMIGOS AL MORIR
@@ -77,7 +73,10 @@ public class Spawner : MonoBehaviour
         enemyToRemove.GetComponent<CanDie>().DeathEvent -= OnEnemyDie; //AL MORIR EL ENEMIGO ME DEJO DE ESTAR SUBSCRITO
         m_AliveEnemies.Remove(enemyToRemove); //LO SACO DE LA LISTA
         Debug.Log("ENEMIGO MUERTO, ENEMIGOS EN LA LISTA: " + m_AliveEnemies.Count); //TEST DEBUG
-        
+        if (m_AliveEnemies.Count < 1)
+        {
+            StartCoroutine(WaitNewWave()); //ACTIVO LA COORUTINA DE ESPERA ENTRE RONDAS
+        }
     }
 
 }
