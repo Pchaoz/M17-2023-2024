@@ -35,7 +35,6 @@ public class EnemyMelee : MonoBehaviour, CanDie //INTERFAZ PARA QUE LOS ENEMIGOS
                 if (m_WhereToGo == -1)
                 {
                     transform.eulerAngles = Vector3.up * 180;
-                    ;
                 }
                 else if (m_WhereToGo == 1)
                 {

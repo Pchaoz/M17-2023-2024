@@ -117,7 +117,7 @@ Transform:
   m_GameObject: {fileID: 7803951270677212625}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 17.419558, y: 1.9125, z: 1}
+  m_LocalScale: {x: 16.11309, y: 1.9125, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 350965284381502821}
@@ -196,7 +196,7 @@ GameObject:
   - component: {fileID: 3702407274542406823}
   m_Layer: 7
   m_Name: EnemyRanged
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -282,12 +282,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ef8e1acb6418d34e9c3bb044385ee55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_DamageEvent: {fileID: 11400000, guid: 566ff8f2377a86c4d871b13be0c453db, type: 2}
   m_Ms: 1
   m_Damage: 2
   m_DetectionRange: {fileID: 4966141334697257041}
   m_HitRange: {fileID: 7803951270677212625}
   m_BulletPrefab: {fileID: 2643363666808880351, guid: 77e777d98e701874494969db944c9899, type: 3}
+  m_BulletSpeed: 0
   m_Hp: 5
 --- !u!50 &-6435749259875962036
 Rigidbody2D:
@@ -361,7 +361,7 @@ Animator:
   m_GameObject: {fileID: 8973223828014086124}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f808f82fc29e5e6449f7759ce1652448, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

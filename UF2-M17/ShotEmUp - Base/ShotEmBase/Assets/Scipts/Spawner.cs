@@ -18,6 +18,8 @@ public class Spawner : MonoBehaviour
     private List<GameObject> m_AliveEnemies; //LISTA CON LOS ENEMIGOS QUE ESTAN VIVOS
     [SerializeField]
     private float m_RoundsCD;
+    [SerializeField]
+    private GameEvent1Int onRoundChange;
 
     private void Start()
     {
@@ -25,6 +27,8 @@ public class Spawner : MonoBehaviour
         m_Round = 1; //RONDA INICIAL PARTIDA
         m_WaveSize = 2; //TAMAÑO MAXIMO OLEADA INICIAL
         StartCoroutine(SpawnWave()); //EMPIEZO A GENERAR ENEMIGOS
+        onRoundChange.Raise(m_Round);
+
     }
 
     //EL SPAWNER QUE GENERA A LOS ENEMIGOS
@@ -62,7 +66,7 @@ public class Spawner : MonoBehaviour
         m_Round++; //INCREMENTA EL NUMERO DE RONDAS QUE HAS SOBREVIVIDO
         m_SpawnedEnemies = 0; //REINICIO LA CANTIDAD DE ENEMIGOS QUE HE SPAWNEADO
         m_AliveEnemies.Clear(); //NO DEBERIA HACER FALTA PORQUE TECNICAMENTE ESTA VACIA PERO POR SI ACASO LO HAGO
-                                //ME FALTA UN EVENTO QUE AVISE A LA GUI DE QUE HA CAMBIADO LA RONDA
+        onRoundChange.Raise(m_Round); //ME FALTA UN EVENTO QUE AVISE A LA GUI DE QUE HA CAMBIADO LA RONDA
         StartCoroutine(SpawnWave()); //ACTIVO LA COORUTINA DE SPAWN DE OLEADA
     }
 

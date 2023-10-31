@@ -9,7 +9,7 @@ public class EnemyRanged : MonoBehaviour, CanDie
     //STATE MACHINE STUFF
 
     //STATES
-    private enum States { NONE, RUN, FOLLOW, HIT };
+    private enum States { NONE, RUN, FOLLOW, SHOOT };
     private States m_CurrentState;
 
     private void ChangeState(States newState)
@@ -27,19 +27,32 @@ public class EnemyRanged : MonoBehaviour, CanDie
         {
             case States.RUN:
                 m_Rb.velocity = new Vector2(m_WhereToGo * m_Ms, m_Rb.velocity.y);
+                if (m_WhereToGo == -1)
+                {
+                    transform.eulerAngles = Vector3.up * 180;
+                }
+                else if (m_WhereToGo == 1)
+                {
+                    transform.eulerAngles = Vector3.zero;
+                }
                 break;
 
             case States.FOLLOW:
                 Vector2 actualPos = transform.position; //MI POSICION
                 Vector2 playerPos = m_Target.transform.position; //LA DEL ENEMIGO
-
-                Vector3 follow = (playerPos - actualPos); //CALCULAS HACIA DONDE ES
+                if (playerPos.x < actualPos.x)
+                {
+                    transform.eulerAngles = Vector3.up * 180;
+                    ;
+                }
+                else if (playerPos.x > actualPos.x)
+                {
+                    transform.eulerAngles = Vector3.zero;
+                }
+                Vector3 follow = (playerPos - actualPos).normalized; //CALCULAS HACIA DONDE ES
                 m_Rb.velocity = new Vector2(follow.x * m_Ms, m_Rb.velocity.y); //LO SIGUES
                 break;
-            case States.HIT:
-                //DISPARO AL PLAYER
-                m_Rb.velocity = Vector2.zero;
-                GameObject bullet = Instantiate(m_BulletPrefab);
+            case States.SHOOT:
                 break;
         }
     }
@@ -52,12 +65,15 @@ public class EnemyRanged : MonoBehaviour, CanDie
             case States.RUN:
                 m_WhereToGo = -1;
                 //REPRODUCIR ANIMACION DE MOVERSE
+                m_Animator.Play("Ranged_Walk");
                 break;
             case States.FOLLOW:
                 //REPRODUCIR ANIMACION DE MOVERSE
+                m_Animator.Play("Ranged_Walk");
                 break;
-            case States.HIT:
+            case States.SHOOT:
                 m_Rb.velocity = Vector2.zero; //PEGA QUIETO
+                m_Animator.Play("Ranged_Shoot");
                 //REPRODUCIR ANIMACION GOLPE
                 break;
         }
@@ -72,25 +88,18 @@ public class EnemyRanged : MonoBehaviour, CanDie
             case States.FOLLOW:
                 break;
 
-            case States.HIT:
+            case States.SHOOT:
                 break;
         }
     }
     // ------------------------------------------------------------------------------------------ \\
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.tag == "Player")
-        {
-            OnDeath();
-        }
-    }
+
 
     public event Action<GameObject> DeathEvent; //DELEGADO DE MUERTE DEL ENEMIGO
-    [SerializeField]
-    private GameEvent1Int m_DamageEvent; //EVENTO CON EL QUE PEGA AL PLAYER
 
     private Rigidbody2D m_Rb; //EL RIGIDBODY
+    private Animator m_Animator;
 
     private GameObject m_Target;
     private float m_WhereToGo; //DIRECCION A LA QUE IRA CADA VEZ QUE ENTRE EN EL METODO PATRULLA (SOLO DEBERIA ENTRAR UNA VEZ)
@@ -111,6 +120,7 @@ public class EnemyRanged : MonoBehaviour, CanDie
     private void Start()
     {
         m_Rb = GetComponent<Rigidbody2D>();
+        m_Animator = GetComponent<Animator>();
         InitState(States.RUN);
         m_DetectionRange.GetComponent<EnemyDetector>().FollowPlayerEvent += PlayerDetected;
         m_DetectionRange.GetComponent<EnemyDetector>().UnfollowPlayerEvent += PlayerLost;
@@ -134,12 +144,14 @@ public class EnemyRanged : MonoBehaviour, CanDie
     {
         if (c)
         {
-            InitState(States.HIT); //LE PEGO
+            InitState(States.SHOOT); //LE PEGO
         }
-        else if (!c)
-        {
-            InitState(States.FOLLOW);  // SE HA SALIDO DEL RANGO VUELVO A SEGUIRLO
-        }
+    }
+    public void Shoot()
+    {
+        GameObject bullet = Instantiate(m_BulletPrefab);
+        bullet.transform.position = transform.position;
+        bullet.GetComponent<BulletController>().LoadDamageAndShoot(m_Damage, m_Target.transform.position);
     }
     private void Update()
     {
@@ -148,9 +160,15 @@ public class EnemyRanged : MonoBehaviour, CanDie
 
     void OnDeath() //EVENTO O DELEGADO EN EL QUE AVISARA QUE HA MUERTO
     {
-        m_DamageEvent.Raise(m_Damage);
         DeathEvent?.Invoke(this.gameObject); //ME MUERO ASI QUE AVISO PARA BORRARME DE LA LISTA
         Destroy(this.gameObject); //ME MUERO :(
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Wall")
+        {
+            m_WhereToGo = m_WhereToGo * -1;
+        }
     }
     private void OnDestroy()
     {
