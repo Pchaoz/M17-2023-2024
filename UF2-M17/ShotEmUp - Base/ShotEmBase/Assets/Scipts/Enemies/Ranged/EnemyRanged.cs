@@ -126,6 +126,10 @@ public class EnemyRanged : MonoBehaviour, CanDie
         m_DetectionRange.GetComponent<EnemyDetector>().UnfollowPlayerEvent += PlayerLost;
         m_HitRange.GetComponent<EnemyHit>().HitPlayerEvent += PlayerAttack;
     }
+    private void Update()
+    {
+        UpdateState();
+    }
 
     private void PlayerDetected(GameObject obj)
     {
@@ -153,11 +157,15 @@ public class EnemyRanged : MonoBehaviour, CanDie
         bullet.transform.position = transform.position;
         bullet.GetComponent<BulletController>().LoadDamageAndShoot(m_Damage, m_Target.transform.position);
     }
-    private void Update()
+    private void ReciveDamage(int dmg)
     {
-        UpdateState();
-    }
+        m_Hp -= dmg;
 
+        if (m_Hp < 1)
+        {
+            OnDeath();
+        }
+    }
     void OnDeath() //EVENTO O DELEGADO EN EL QUE AVISARA QUE HA MUERTO
     {
         DeathEvent?.Invoke(this.gameObject); //ME MUERO ASI QUE AVISO PARA BORRARME DE LA LISTA
@@ -170,6 +178,16 @@ public class EnemyRanged : MonoBehaviour, CanDie
             m_WhereToGo = m_WhereToGo * -1;
         }
     }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "PlayerHitBox")
+        {
+            Debug.Log("Me ha pegado el player");
+            int dmg = collision.gameObject.GetComponent<HitBoxController>().m_Damage;
+            ReciveDamage(dmg);
+        }
+    }
+    
     private void OnDestroy()
     {
         m_DetectionRange.GetComponent<EnemyDetector>().FollowPlayerEvent -= PlayerDetected; //ME DESSUCRIBO PORQUE SI ME MUERO YA NO HACE FALTA NINGUN EVENTO

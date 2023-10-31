@@ -15,8 +15,7 @@ public class PlayerControler : MonoBehaviour
     //STATES
     private enum States { NONE, IDLE, RUN, JUMP, LIGHTHIT, HEAVYHIT, HITCMB };
     private States m_CurrentState;
-    private bool canLightCombo;
-    private bool canHardCombo;
+    private bool canCombo;
     private Animator m_Animator;
 
     private void ChangeState(States newState)
@@ -76,6 +75,7 @@ public class PlayerControler : MonoBehaviour
                 break;
 
             case States.HITCMB:
+                SendDamage(m_ComboDamage);
                 break;
         }
     }
@@ -109,6 +109,11 @@ public class PlayerControler : MonoBehaviour
                 m_Rb.velocity = Vector2.zero; //PEGA QUIETO
                 //REPRODUCIR ANIMACION GOLPE 2
                 m_Animator.Play("Player_HeavyHit");
+                break;
+            case States.HITCMB:
+                m_Rb.velocity = Vector2.zero; //PEGA QUIETO
+                //REPRODUCIR ANIMACION GOLPE 2
+                m_Animator.Play("Player_Combo");
                 break;
         }
     }
@@ -158,6 +163,7 @@ public class PlayerControler : MonoBehaviour
     [SerializeField]
     private int m_JumpForce;
 
+    private bool onHit;
     private bool isJumping;
 
     //RIGIDBODY AND STUFF
@@ -183,6 +189,7 @@ public class PlayerControler : MonoBehaviour
         m_Animator = GetComponent<Animator>();
         m_Rb = GetComponent<Rigidbody2D>();
         m_ColliderBottom = Vector3.up * GetComponent<BoxCollider2D>().size.y / 2; //LA PART DE ABAIX DEl COLLIDER
+        onHit = false;
     }
 
     private void Start()
@@ -197,16 +204,17 @@ public class PlayerControler : MonoBehaviour
 
     public void ReturnToIdle()
     {
+        onHit = false;
         ChangeState(States.IDLE);
     }
 
-    public void OpenLightCombo()
+    public void OpenComboWindow()
     {
-        canLightCombo = true;
+        canCombo = true;
     }
-    public void CloseLightCombo()
+    public void CloseComboWindow()
     {
-        canLightCombo = false;
+        canCombo = false;
     }
     public void ReciveDamage(int damage)
     {
@@ -228,21 +236,34 @@ public class PlayerControler : MonoBehaviour
     }
     private void HeavyHit(InputAction.CallbackContext actionContext)
     {
-        if (m_CurrentState != States.JUMP || m_CurrentState != States.LIGHTHIT || m_CurrentState != States.HEAVYHIT)
+        if (!isJumping && !onHit)
         {
             ChangeState(States.HEAVYHIT);
+            onHit = true;
+        }
+        if (canCombo)
+        {
+            ChangeState(States.HITCMB);
+
+            canCombo = false;
         }
     }
     private void LightHit(InputAction.CallbackContext actionContext)
     {
-        if (m_CurrentState != States.JUMP || m_CurrentState != States.LIGHTHIT || m_CurrentState != States.HEAVYHIT)
+        if (!isJumping && !onHit)
         {
             ChangeState(States.LIGHTHIT);
+            onHit = true;
+        }
+        if (canCombo)
+        {
+            ChangeState(States.HITCMB);
+            canCombo = false;
         }
     }
     private void Jump(InputAction.CallbackContext actionContext)
     {
-        if (!isJumping)
+        if (!isJumping && !onHit)
         {
             Vector3 initialPos = transform.position - m_ColliderBottom;
             RaycastHit2D hit = Physics2D.Raycast(initialPos, Vector2.down, 0.3f, LayerMask.GetMask("Ground"));
@@ -267,7 +288,7 @@ public class PlayerControler : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "EnemyHitBox")
+        if (collision.gameObject.CompareTag("EnemyHitBox"))
         {
             int dmg = collision.gameObject.GetComponent<HitBoxController>().m_Damage;
             ReciveDamage(dmg);
