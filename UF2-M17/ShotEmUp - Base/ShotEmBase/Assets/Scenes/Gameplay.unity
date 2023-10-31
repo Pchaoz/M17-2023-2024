@@ -1638,8 +1638,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 60.7, y: -37.6}
-  m_SizeDelta: {x: 100, y: 20}
+  m_AnchoredPosition: {x: 68.2, y: -37.6}
+  m_SizeDelta: {x: 150, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &982544253
 GameObject:
@@ -1900,6 +1900,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1423195822}
   - component: {fileID: 1423195821}
+  - component: {fileID: 1423195823}
+  - component: {fileID: 1423195824}
   m_Layer: 0
   m_Name: UI
   m_TagString: Untagged
@@ -1919,7 +1921,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e480a961f330474dbdab58903a4389f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_RoundsText: {fileID: 0}
+  m_RoundsText: {fileID: 2080230224}
   m_PlayerHp: {fileID: 967560993}
 --- !u!4 &1423195822
 Transform:
@@ -1937,6 +1939,62 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1423195823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1423195820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2b0c0bdf6f1c4345aa0256fe10639ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Event: {fileID: 11400000, guid: ea988ac23720a1d44ac10a67d0d42ce1, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1423195821}
+        m_TargetAssemblyTypeName: UIGameplayManager, Assembly-CSharp
+        m_MethodName: OnHpChange
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1423195824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1423195820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2b0c0bdf6f1c4345aa0256fe10639ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Event: {fileID: 11400000, guid: d64dedddae245fd42af78f97fbc4db60, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1423195821}
+        m_TargetAssemblyTypeName: UIGameplayManager, Assembly-CSharp
+        m_MethodName: OnRoundsChange
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1481708616
 GameObject:
   m_ObjectHideFlags: 0
@@ -2797,6 +2855,7 @@ MonoBehaviour:
   m_SpawnCD: 5
   m_AliveEnemies: []
   m_RoundsCD: 5
+  onRoundChange: {fileID: 11400000, guid: d64dedddae245fd42af78f97fbc4db60, type: 2}
 --- !u!4 &2025534632
 Transform:
   m_ObjectHideFlags: 0
@@ -3035,6 +3094,10 @@ PrefabInstance:
       propertyPath: m_Ms
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 3517148189570102007, guid: be6126c18bf2a6a46b8a640ed2646931, type: 3}
+      propertyPath: OnHpChange
+      value: 
+      objectReference: {fileID: 11400000, guid: ea988ac23720a1d44ac10a67d0d42ce1, type: 2}
     - target: {fileID: 3517148189570102007, guid: be6126c18bf2a6a46b8a640ed2646931, type: 3}
       propertyPath: m_HeavyDmg
       value: 5

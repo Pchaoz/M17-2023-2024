@@ -9,6 +9,8 @@ TagManager:
   - Roof
   - EnemyHitBox
   - PlayerHitBox
+  - Ground
+  - EnemyBullet
   layers:
   - Default
   - TransparentFX
