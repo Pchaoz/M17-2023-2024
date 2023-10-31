@@ -6,6 +6,7 @@ using UnityEditor.Timeline.Actions;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerControler : MonoBehaviour
 {
@@ -216,6 +217,7 @@ public class PlayerControler : MonoBehaviour
         if (m_Hp == 0 || m_Hp < 0)
         {
             //ME MUERO Y PASAN COSAS
+            SceneManager.LoadScene(1);
             Destroy(this.gameObject);
         }
     }

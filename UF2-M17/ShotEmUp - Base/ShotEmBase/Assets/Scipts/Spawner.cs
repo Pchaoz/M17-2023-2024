@@ -8,12 +8,13 @@ public class Spawner : MonoBehaviour
     [SerializeField]
     private List<GameObject> m_SpawnType; //DOS TIPOS DE ENEMIGOS A SPAWNEAR
 
-    [SerializeField]
-    private int m_Round; //NUMERO DE RONDA EN LA QUE ESTAS
+   
     [SerializeField]
     private int m_SpawnCD; //COOLDOWN ENTRE GENERACION DE ENEMIGOS
     private int m_WaveSize; //TAMAÑO MAXIMO OLEADA
     private int m_SpawnedEnemies;
+    [SerializeField]
+    private RoundsInfo m_Round;
     [SerializeField]
     private List<GameObject> m_AliveEnemies; //LISTA CON LOS ENEMIGOS QUE ESTAN VIVOS
     [SerializeField]
@@ -24,10 +25,10 @@ public class Spawner : MonoBehaviour
     private void Start()
     {
         m_SpawnedEnemies = 0; //CONTADOR DE ENEMIGOS SPAWNEADOS A 0
-        m_Round = 1; //RONDA INICIAL PARTIDA
+        m_Round.round = 1; //RONDA INICIAL PARTIDA
         m_WaveSize = 2; //TAMAÑO MAXIMO OLEADA INICIAL
         StartCoroutine(SpawnWave()); //EMPIEZO A GENERAR ENEMIGOS
-        onRoundChange.Raise(m_Round);
+        onRoundChange.Raise(m_Round.round);
 
     }
 
@@ -37,7 +38,7 @@ public class Spawner : MonoBehaviour
         while (m_SpawnedEnemies < m_WaveSize) 
         {
             GameObject Enemy;
-            if (m_Round > 1) //SOLO CONTROLO LA PRIMERA RONDA PORQUE ES LA QUE SOLO SPAWNEA MELEE
+            if (m_Round.round > 1) //SOLO CONTROLO LA PRIMERA RONDA PORQUE ES LA QUE SOLO SPAWNEA MELEE
             {
                 Enemy = Instantiate(m_SpawnType[Random.Range(0, m_SpawnType.Count)]); //SPAWNEO UN ENEMIGO ALEATORIO
                 Enemy.transform.position = transform.position; //LE ASIGNO LA POSICION DEL SPAWNER
@@ -63,10 +64,10 @@ public class Spawner : MonoBehaviour
                                                                       //AVISO QUE LA RONDA HA ACABADO CON UN TEXTO O ALGO (HACE EVENTO)
         yield return new WaitForSeconds(m_RoundsCD); // 30 SEGUNDOS HASTA LA PROXIMA RONDA
         m_WaveSize += 2; //SPAWNEO 2 MAS LA PROXIMA RONDA
-        m_Round++; //INCREMENTA EL NUMERO DE RONDAS QUE HAS SOBREVIVIDO
+        m_Round.round++; //INCREMENTA EL NUMERO DE RONDAS QUE HAS SOBREVIVIDO
         m_SpawnedEnemies = 0; //REINICIO LA CANTIDAD DE ENEMIGOS QUE HE SPAWNEADO
         m_AliveEnemies.Clear(); //NO DEBERIA HACER FALTA PORQUE TECNICAMENTE ESTA VACIA PERO POR SI ACASO LO HAGO
-        onRoundChange.Raise(m_Round); //ME FALTA UN EVENTO QUE AVISE A LA GUI DE QUE HA CAMBIADO LA RONDA
+        onRoundChange.Raise(m_Round.round); //ME FALTA UN EVENTO QUE AVISE A LA GUI DE QUE HA CAMBIADO LA RONDA
         StartCoroutine(SpawnWave()); //ACTIVO LA COORUTINA DE SPAWN DE OLEADA
     }
 

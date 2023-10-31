@@ -2851,8 +2851,8 @@ MonoBehaviour:
   m_SpawnType:
   - {fileID: 4087048394435512612, guid: 6f8c9811570585b4093d5c3e22eaf45f, type: 3}
   - {fileID: 8973223828014086124, guid: 5cf1755a6684b0e4385ec5f42f3b941e, type: 3}
-  m_Round: 0
   m_SpawnCD: 5
+  m_Round: {fileID: 11400000, guid: 9842e8e6956326f41ae88b22be4fe094, type: 2}
   m_AliveEnemies: []
   m_RoundsCD: 5
   onRoundChange: {fileID: 11400000, guid: d64dedddae245fd42af78f97fbc4db60, type: 2}
