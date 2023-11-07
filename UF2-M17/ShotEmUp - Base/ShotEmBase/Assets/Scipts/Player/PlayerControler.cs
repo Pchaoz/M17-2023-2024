@@ -261,12 +261,13 @@ public class PlayerControler : MonoBehaviour
         if (!isJumping && !onHit)
         {
             Vector3 initialPos = transform.position - m_ColliderBottom;
-            RaycastHit2D hit = Physics2D.Raycast(initialPos, Vector2.down, 0.3f, LayerMask.GetMask("Ground"));
+            RaycastHit2D hit = Physics2D.Raycast(initialPos, Vector2.down, 0.2f, LayerMask.GetMask("Ground"));
             if (hit.collider != null)
             {
-                //Debug.DrawLine(initialPos, hit.point, new UnityEngine.Color(1f, 0f, 1f), 5f);
+                Debug.DrawLine(initialPos, hit.point, new Color(1f, 0f, 1f), 5f);
                 m_Rb.velocity = new Vector2(m_Rb.velocity.x, m_JumpForce);
                 isJumping = true;
+                //Debug.Log("SALTO WIIIIIIIIIIIIIIIIII");
             }
         }
     }
