@@ -173,6 +173,7 @@ public class PlayerControler : MonoBehaviour
     private Vector3 m_ColliderBottom;
     private void Awake()
     {
+        //SUBSCRIPCION AL INPUT SYSTEM
         Assert.IsNotNull(m_InputAsset);
         m_Input = Instantiate(m_InputAsset);
         m_MovementAction = m_Input.FindActionMap("Movement").FindAction("Walk");
@@ -181,10 +182,10 @@ public class PlayerControler : MonoBehaviour
         m_Input.FindActionMap("Movement").FindAction("HeavyHit").performed += HeavyHit;
         m_Input.FindActionMap("Movement").Enable();
 
-        m_Animator = GetComponent<Animator>();
-        m_Rb = GetComponent<Rigidbody2D>();
-        m_ColliderBottom = Vector3.up * GetComponent<BoxCollider2D>().size.y / 2; //LA PART DE ABAIX DEl COLLIDER
-        onHit = false;
+        m_Animator = GetComponent<Animator>(); //ME GUARDO MI ANIMATOR
+        m_Rb = GetComponent<Rigidbody2D>(); //ME GUARDO MI RIGIDBODY
+        m_ColliderBottom = Vector3.up * GetComponent<BoxCollider2D>().size.y / 2; //ESTE CALCULO ES LA PARTE DE ABAJO DE MI COLLIDER (LA POSICION BOTTOM DEL COLLIDER)
+        onHit = false; //NO ESTOY PEGANDO POR DEFECTO
     }
 
     private void Start()
@@ -213,21 +214,20 @@ public class PlayerControler : MonoBehaviour
     }
     public void ReciveDamage(int damage)
     {
-        Debug.Log("He rebut: " + damage + " de mal");
-        m_Hp -= damage;
-        OnHpChange.Raise(m_Hp);
+        //Debug.Log("He rebut: " + damage + " de mal");
+        m_Hp -= damage; //RECIBO DAÑO
+        OnHpChange.Raise(m_Hp); //LE COMUNICO A LA UI EL NUEVO VALOR DE MI NUEVA VIDA
 
         if (m_Hp == 0 || m_Hp < 0)
         {
-            //ME MUERO Y PASAN COSAS
-            SceneManager.LoadScene(1);
-            Destroy(this.gameObject);
+            SceneManager.LoadScene(1); //CAMBIO DE ESCENA
+            Destroy(this.gameObject); //MUERO
         }
     }
 
-    private void SendDamage(int dmg)
+    private void SendDamage(int dmg) 
     {
-        m_Hitbox.GetComponent<HitBoxController>().LoadDamage(dmg);
+        m_Hitbox.GetComponent<HitBoxController>().LoadDamage(dmg); //ENVIA EL DAÑO A LA HITBOX
     }
     private void HeavyHit(InputAction.CallbackContext actionContext)
     {
@@ -258,27 +258,25 @@ public class PlayerControler : MonoBehaviour
     }
     private void Jump(InputAction.CallbackContext actionContext)
     {
-        if (!isJumping && !onHit)
+        if (!isJumping && !onHit) //SI NO ESTA YA EN EL AIRE NI ESTA PEGANDO
         {
-            Vector3 initialPos = transform.position - m_ColliderBottom;
-            RaycastHit2D hit = Physics2D.Raycast(initialPos, Vector2.down, 0.2f, LayerMask.GetMask("Ground"));
-            if (hit.collider != null)
+            Vector3 initialPos = transform.position - m_ColliderBottom; //PILO LA POSICION DESDE LA CUAL DISPARARE EL RAYCAST
+            RaycastHit2D hit = Physics2D.Raycast(initialPos, Vector2.down, 0.2f, LayerMask.GetMask("Ground")); // CASTEO EL RAYCAST Y HAGO QUE SOLO PUEDA CHOACAR CONTRA EL LAYER "GROUND"
+            if (hit.collider != null) //SI EL RAYCAST CHOCA CONTRA ALGO
             {
-                Debug.DrawLine(initialPos, hit.point, new Color(1f, 0f, 1f), 5f);
-                m_Rb.velocity = new Vector2(m_Rb.velocity.x, m_JumpForce);
-                isJumping = true;
-                //Debug.Log("SALTO WIIIIIIIIIIIIIIIIII");
+                m_Rb.velocity = new Vector2(m_Rb.velocity.x, m_JumpForce); //AÑADO LA FUERZA PARA SALTAR
+                isJumping = true; //ME PONGO A SALTAR POR LO QUE PONGO LA VARIABLE A TRUE
             }
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        //Debug.Log("He tocado algo"); //ESTO ESTABA PARA HACER PRUEBAS
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground")) 
+        //Debug.Log("He tocado algo");
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))  //SI TOCO EL SUELO
         {
             //Debug.Log("JUMP RESET");
-            isJumping = false;
+            isJumping = false; //RESETEO EL SALTO
         }
     }
 
@@ -286,12 +284,14 @@ public class PlayerControler : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("EnemyHitBox"))
         {
-            int dmg = collision.gameObject.GetComponent<HitBoxController>().m_Damage;
-            ReciveDamage(dmg);
+            int dmg = collision.gameObject.GetComponent<HitBoxController>().m_Damage; //PILLO EL DAÑO DE LO QUE SEA ENEMIGO QUE ME HAYA PEGADO
+            ReciveDamage(dmg); //RECIBO EL DAÑO
         }
     }
     private void OnDestroy()
     {
+        //ME DESSUBSCRIBO DE LAS COSAS AL MORIR
+
         m_Input.FindActionMap("Movement").FindAction("LightHit").performed -= LightHit;
         m_Input.FindActionMap("Movement").FindAction("HeavyHit").performed -= HeavyHit;
         m_Input.FindActionMap("Movement").FindAction("Jump").performed -= Jump;

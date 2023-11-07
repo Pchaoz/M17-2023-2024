@@ -11,11 +11,10 @@ public class Spawner : MonoBehaviour
     [SerializeField]
     private int m_SpawnCD; //COOLDOWN ENTRE GENERACION DE ENEMIGOS
     private int m_WaveSize; //TAMAÑO MAXIMO OLEADA
+    private int m_ToKill; //CONTADOR DE ENEMIGOS ANTES DE PASAR DE RONDA
     private int m_SpawnedEnemies;
     [SerializeField]
     private RoundsInfo m_Round;
-    [SerializeField]
-    private List<GameObject> m_AliveEnemies; //LISTA CON LOS ENEMIGOS QUE ESTAN VIVOS
     [SerializeField]
     private float m_RoundsCD;
     [SerializeField]
@@ -26,14 +25,17 @@ public class Spawner : MonoBehaviour
         m_SpawnedEnemies = 0; //CONTADOR DE ENEMIGOS SPAWNEADOS A 0
         m_Round.round = 1; //RONDA INICIAL PARTIDA
         m_WaveSize = 2; //TAMAÑO MAXIMO OLEADA INICIAL
+        m_ToKill = m_WaveSize;
         StartCoroutine(SpawnWave()); //EMPIEZO A GENERAR ENEMIGOS
-        onRoundChange.Raise(m_Round.round);
+        onRoundChange.Raise(m_Round.round); //EVENTO QUE MANDA QUE RONDA ES A LA UI
 
     }
 
     //EL SPAWNER QUE GENERA A LOS ENEMIGOS
     private IEnumerator SpawnWave()
     {
+
+        //Debug.Log("HAS DE MATAR: " + m_ToKill + " enemigos");
         while (m_SpawnedEnemies < m_WaveSize) 
         {
             GameObject Enemy;
@@ -47,9 +49,7 @@ public class Spawner : MonoBehaviour
                 Enemy = Instantiate(m_SpawnType[0]); //SPAWNEO EL ENEMIGO MELEE
                 Enemy.transform.position = transform.position; //LE ASIGNO LA POSICION DEL SPAWNER
             }
-            m_AliveEnemies.Add(Enemy); //AÑADO EL ENEMIGO A LA LISTA DE ENEMIGOS VIVOS
             Enemy.GetComponent<CanDie>().DeathEvent += OnEnemyDie; //ME SUBSCRIBO AL EVENTO
-            Debug.Log("SPAWNEADO ENEMIGO, ENEMIGOS EN LA LISTA: " + m_AliveEnemies.Count);
             m_SpawnedEnemies++; //AÑADO UN ENEMIGO SPAWNEADO A LA LISTA
             yield return new WaitForSeconds(m_SpawnCD); //ESPERO PARA SPAWNEAR AL SIGUIENTE
         }
@@ -63,9 +63,9 @@ public class Spawner : MonoBehaviour
                                                                       //AVISO QUE LA RONDA HA ACABADO CON UN TEXTO O ALGO (HACE EVENTO)
         yield return new WaitForSeconds(m_RoundsCD); // 30 SEGUNDOS HASTA LA PROXIMA RONDA
         m_WaveSize += 2; //SPAWNEO 2 MAS LA PROXIMA RONDA
+        m_ToKill = m_WaveSize;
         m_Round.round++; //INCREMENTA EL NUMERO DE RONDAS QUE HAS SOBREVIVIDO
         m_SpawnedEnemies = 0; //REINICIO LA CANTIDAD DE ENEMIGOS QUE HE SPAWNEADO
-        m_AliveEnemies.Clear(); //NO DEBERIA HACER FALTA PORQUE TECNICAMENTE ESTA VACIA PERO POR SI ACASO LO HAGO
         onRoundChange.Raise(m_Round.round); //ME FALTA UN EVENTO QUE AVISE A LA GUI DE QUE HA CAMBIADO LA RONDA
         StartCoroutine(SpawnWave()); //ACTIVO LA COORUTINA DE SPAWN DE OLEADA
     }
@@ -75,11 +75,10 @@ public class Spawner : MonoBehaviour
     void OnEnemyDie(GameObject enemyToRemove)
     {
         enemyToRemove.GetComponent<CanDie>().DeathEvent -= OnEnemyDie; //AL MORIR EL ENEMIGO ME DEJO DE ESTAR SUBSCRITO
-        m_AliveEnemies.Remove(enemyToRemove); //LO SACO DE LA LISTA
-        Debug.Log("ENEMIGO MUERTO, ENEMIGOS EN LA LISTA: " + m_AliveEnemies.Count); //TEST DEBUG
-        if (m_AliveEnemies.Count < 1)
-        {
+        m_ToKill--;
+        //Debug.Log("QUEDAN POR MATAR: " + m_ToKill + " enemigos");
+        if (m_ToKill == 0) //PUES ESO, QUE SI NO QUEDAN ENEMIGOS QUE MATAR CAMBIAS DE RONDA
             StartCoroutine(WaitNewWave()); //ACTIVO LA COORUTINA DE ESPERA ENTRE RONDAS
-        }
+
     }
 }
