@@ -117,8 +117,6 @@ public class EnemyMelee : MonoBehaviour, CanDie //INTERFAZ PARA QUE LOS ENEMIGOS
 
 
     public event Action<GameObject> DeathEvent; //DELEGADO DE MUERTE DEL ENEMIGO
-    [SerializeField]
-    private GameEvent1Int m_DamageEvent; //EVENTO CON EL QUE PEGA AL PLAYER
 
     private Rigidbody2D m_Rb; //EL RIGIDBODY
     

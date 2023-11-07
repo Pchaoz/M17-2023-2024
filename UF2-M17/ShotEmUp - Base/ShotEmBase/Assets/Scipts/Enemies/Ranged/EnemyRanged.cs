@@ -155,7 +155,8 @@ public class EnemyRanged : MonoBehaviour, CanDie
     {
         GameObject bullet = Instantiate(m_BulletPrefab);
         bullet.transform.position = transform.position;
-        bullet.GetComponent<BulletController>().LoadDamageAndShoot(m_Damage, m_Target.transform.position);
+        bullet.GetComponent<HitBoxController>().LoadDamage(m_Damage);
+        bullet.GetComponent<BulletController>().LoadShot(m_Target.transform.position);
     }
     private void ReciveDamage(int dmg)
     {

@@ -10,7 +10,7 @@ public class EnemyHit : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.CompareTag("Player"))
         {
             Debug.Log("ESTOY EN AREA DE PEGAR AL PLAYER");
             HitPlayerEvent?.Invoke(true);

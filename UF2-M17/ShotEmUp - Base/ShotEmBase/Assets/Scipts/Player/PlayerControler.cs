@@ -293,11 +293,6 @@ public class PlayerControler : MonoBehaviour
             int dmg = collision.gameObject.GetComponent<HitBoxController>().m_Damage;
             ReciveDamage(dmg);
         }
-        if (collision.gameObject.tag == "EnemyBullet")
-        {
-            int dmg = collision.gameObject.GetComponent<BulletController>().m_Damage;
-            ReciveDamage(dmg);
-        }
     }
     private void OnDestroy()
     {

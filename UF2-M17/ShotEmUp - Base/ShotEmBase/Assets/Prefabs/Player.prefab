@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1758675906675443862}
   - component: {fileID: 2682079829243052059}
   - component: {fileID: 758170483770289927}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HitBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -104,7 +104,7 @@ GameObject:
   - component: {fileID: 3517148189570102007}
   - component: {fileID: 2241106148346584555}
   - component: {fileID: 6882304168743360716}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -198,6 +198,7 @@ MonoBehaviour:
   m_HeavyDmg: 0
   m_ComboDamage: 0
   m_JumpForce: 8
+  OnHpChange: {fileID: 0}
   m_Hitbox: {fileID: 5795693677739846600}
 --- !u!50 &2241106148346584555
 Rigidbody2D:

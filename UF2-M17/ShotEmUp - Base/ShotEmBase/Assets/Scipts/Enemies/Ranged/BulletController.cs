@@ -5,7 +5,6 @@ using static UnityEngine.GraphicsBuffer;
 
 public class BulletController : MonoBehaviour
 {
-    public int m_Damage;
     [SerializeField]
     public float m_Speed;
     private Rigidbody2D m_Rb;
@@ -19,9 +18,8 @@ public class BulletController : MonoBehaviour
     {
         StartCoroutine(Autodestruction());
     }
-    public void LoadDamageAndShoot(int dmg, Vector3 position)
+    public void LoadShot(Vector3 position)
     {
-        m_Damage = dmg;
         Vector3 dir = (position - transform.position).normalized;
         m_Rb.velocity = dir * m_Speed;
     }

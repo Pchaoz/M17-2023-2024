@@ -10,7 +10,6 @@ TagManager:
   - EnemyHitBox
   - PlayerHitBox
   - Ground
-  - EnemyBullet
   layers:
   - Default
   - TransparentFX
@@ -20,7 +19,7 @@ TagManager:
   - UI
   - Wall
   - Enemy
-  - 
+  - Player
   - 
   - 
   - 
