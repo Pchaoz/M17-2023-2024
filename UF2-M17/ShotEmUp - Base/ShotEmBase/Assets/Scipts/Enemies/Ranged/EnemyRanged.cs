@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class EnemyRanged : MonoBehaviour, CanDie
 {
@@ -148,7 +145,7 @@ public class EnemyRanged : MonoBehaviour, CanDie
     {
         if (c)
         {
-            InitState(States.SHOOT); //LE PEGO
+            ChangeState(States.SHOOT); //LE PEGO
         }
     }
     public void Shoot()
