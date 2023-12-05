@@ -53,6 +53,24 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""ShootBlue"",
+                    ""type"": ""Button"",
+                    ""id"": ""4695ccdc-86b1-4143-96e9-d575da7c32ab"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ShootOrange"",
+                    ""type"": ""Button"",
+                    ""id"": ""1c432979-9b92-492e-ad38-ee7b6e6c0700"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -132,6 +150,28 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f8d3ead9-56fc-4aa1-9bb8-c791d8424c7f"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ShootBlue"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""244d7a87-4335-487d-bd49-447630657a1a"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ShootOrange"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -149,6 +189,8 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         m_Ground_Walk = m_Ground.FindAction("Walk", throwIfNotFound: true);
         m_Ground_Jump = m_Ground.FindAction("Jump", throwIfNotFound: true);
         m_Ground_Look = m_Ground.FindAction("Look", throwIfNotFound: true);
+        m_Ground_ShootBlue = m_Ground.FindAction("ShootBlue", throwIfNotFound: true);
+        m_Ground_ShootOrange = m_Ground.FindAction("ShootOrange", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -213,6 +255,8 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
     private readonly InputAction m_Ground_Walk;
     private readonly InputAction m_Ground_Jump;
     private readonly InputAction m_Ground_Look;
+    private readonly InputAction m_Ground_ShootBlue;
+    private readonly InputAction m_Ground_ShootOrange;
     public struct GroundActions
     {
         private @PlayerInputs m_Wrapper;
@@ -220,6 +264,8 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         public InputAction @Walk => m_Wrapper.m_Ground_Walk;
         public InputAction @Jump => m_Wrapper.m_Ground_Jump;
         public InputAction @Look => m_Wrapper.m_Ground_Look;
+        public InputAction @ShootBlue => m_Wrapper.m_Ground_ShootBlue;
+        public InputAction @ShootOrange => m_Wrapper.m_Ground_ShootOrange;
         public InputActionMap Get() { return m_Wrapper.m_Ground; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -238,6 +284,12 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
+            @ShootBlue.started += instance.OnShootBlue;
+            @ShootBlue.performed += instance.OnShootBlue;
+            @ShootBlue.canceled += instance.OnShootBlue;
+            @ShootOrange.started += instance.OnShootOrange;
+            @ShootOrange.performed += instance.OnShootOrange;
+            @ShootOrange.canceled += instance.OnShootOrange;
         }
 
         private void UnregisterCallbacks(IGroundActions instance)
@@ -251,6 +303,12 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
             @Look.canceled -= instance.OnLook;
+            @ShootBlue.started -= instance.OnShootBlue;
+            @ShootBlue.performed -= instance.OnShootBlue;
+            @ShootBlue.canceled -= instance.OnShootBlue;
+            @ShootOrange.started -= instance.OnShootOrange;
+            @ShootOrange.performed -= instance.OnShootOrange;
+            @ShootOrange.canceled -= instance.OnShootOrange;
         }
 
         public void RemoveCallbacks(IGroundActions instance)
@@ -282,5 +340,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         void OnWalk(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
+        void OnShootBlue(InputAction.CallbackContext context);
+        void OnShootOrange(InputAction.CallbackContext context);
     }
 }

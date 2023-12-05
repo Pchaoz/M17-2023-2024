@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.InputSystem;
-using UnityEngine.Windows;
 
 public class PlayerController : MonoBehaviour
 {
@@ -97,6 +97,16 @@ public class PlayerController : MonoBehaviour
     private float m_JumpForce;
     private bool OnGround;
 
+    [Header("Prefab de los portales")]
+    [SerializeField]
+    private GameObject prefabBlue;
+    [SerializeField]
+    private GameObject prefabOrange;
+
+    //LOS PORTALES YA INICIALZADOS
+    private GameObject m_BluePortal;
+    private GameObject m_OrangePortal;
+
     [SerializeField]
     private LayerMask m_Layer;
     private Rigidbody m_Rb;
@@ -111,11 +121,19 @@ public class PlayerController : MonoBehaviour
         OnGround = true;
         m_Rb = GetComponent<Rigidbody>();
 
+        //INSTANCIAR LOS PORTALES Y GUARDARLOS DESHABILITADOS
+        m_BluePortal = Instantiate(prefabBlue);
+        m_OrangePortal = Instantiate(prefabOrange);
+        m_BluePortal.SetActive(false);
+        m_OrangePortal.SetActive(false);
+
         Assert.IsNotNull(m_InputAsset);
         m_Input = Instantiate(m_InputAsset);
         m_BodyMovemnt = m_Input.FindActionMap("Ground").FindAction("Walk"); //MOVIMIENTO WASD
         m_HeadMovement = m_Input.FindActionMap("Ground").FindAction("Look"); //DELTA DEL RATON
-        m_Input.FindActionMap("Ground").FindAction("Jump").performed += Jump;
+        m_Input.FindActionMap("Ground").FindAction("Jump").performed += Jump; //INPUT DEL ESPACIO
+        m_Input.FindActionMap("Ground").FindAction("ShootOrange").performed += ShootPortal;
+        m_Input.FindActionMap("Ground").FindAction("ShootBlue").performed += ShootPortal;
 
         m_Input.Enable();
     }
@@ -147,26 +165,55 @@ public class PlayerController : MonoBehaviour
     }
 
     private void Jump(InputAction.CallbackContext actionContext)
-    {
-        
+    { 
         if (OnGround)
         {
-            
             Vector3 bottomCol = Vector3.up * GetComponent<CapsuleCollider>().radius / 2;
-            RaycastHit2D hit = Physics2D.Raycast(bottomCol, Vector2.down, 0.5f, m_Layer);
-            Debug.DrawLine(bottomCol, hit.point, Color.red, 100);
-            Debug.Log(hit.collider);
-            if (hit.collider != null) //SI EL RAYCAST CHOCA CONTRA ALGO
+            RaycastHit hit;
+            Debug.Log("QUIERO SALTAR, VARIABLE DE SALTO: " + OnGround);
+
+            if (Physics.Raycast(bottomCol, Vector2.down, out hit, 0.5f, m_Layer))
             {
-                Debug.Log("EL RAYCAST HA TOCAO EL SUELO");
-                m_Rb.velocity = new Vector2(m_Rb.velocity.x, m_JumpForce); //AÑADO LA FUERZA PARA SALTAR
-                OnGround = false; //ME PONGO A SALTAR POR LO QUE PONGO LA VARIABLE A TRUE
-                ChangeState(CharacterState.JUMP);
+                if(hit.collider.gameObject.CompareTag("Jumpable"))
+                {
+                    Debug.Log($"He tocat {hit.collider.gameObject.tag} a la posicio {hit.point} amb normal {hit.normal}");
+                    Debug.DrawLine(bottomCol, hit.point, Color.green, 50f);
+                    m_Rb.AddForce(0, m_JumpForce, 0, ForceMode.Impulse);
+                    OnGround = false;
+                }
+               
+            }         
+        }
+    }
+
+    private void ShootPortal(InputAction.CallbackContext actionContext)
+    {
+        RaycastHit hit;
+        Debug.Log(actionContext.action.name); // LITERALMENTE EL NOMBRE DE LA ACCION
+        Vector3 direction = m_FPCamera.transform.forward;
+        if (Physics.Raycast(m_FPCamera.transform.position, m_FPCamera.transform.forward, out hit, Mathf.Infinity, m_Layer))
+        {
+            Debug.DrawLine(m_FPCamera.transform.position, hit.point, Color.magenta, 50f);
+            if (actionContext.action.name.Equals("ShootOrange"))
+            {
+                m_OrangePortal.transform.position = hit.point;
+                m_OrangePortal.transform.rotation = Quaternion.FromToRotation(m_OrangePortal.transform.forward, hit.normal) * m_OrangePortal.transform.rotation;
+                if (!m_OrangePortal.activeSelf)
+                    m_OrangePortal.SetActive(true);
+
+                Debug.Log("PORTAL NARANJA");
+            }else if (actionContext.action.name.Equals("ShootBlue"))
+            {
+                m_BluePortal.transform.position = hit.point;
+                m_BluePortal.transform.rotation = Quaternion.FromToRotation(m_BluePortal.transform.forward, hit.normal) * m_BluePortal.transform.rotation;
+                if (!m_BluePortal.activeSelf)
+                    m_BluePortal.SetActive(true);
+
+                Debug.Log("PORTAL AZUL");
             }
         }
-            
-       
-    }
+    } 
+
     private void FixedUpdate()
     {
         UpdateState();
@@ -174,11 +221,10 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.layer == m_Layer)
+        Debug.Log(collision.gameObject.tag);
+        if (collision.gameObject.CompareTag("Jumpable"))
         {
-            Debug.Log("Choco contra el suelo");
             OnGround = true;
-            ChangeState(CharacterState.IDLE);
         }
     }
 }
