@@ -175,7 +175,7 @@ public class PlayerController : MonoBehaviour
 
             if (Physics.Raycast(bottomCol, Vector2.down, out hit, 0.5f, m_Layer))
             {
-                if(hit.collider.gameObject.CompareTag("Jumpable"))
+                if(hit.collider.gameObject.CompareTag("CanPortal") || hit.collider.gameObject.CompareTag("CantPortal"))
                 {
                     Debug.Log($"He tocat {hit.collider.gameObject.tag} a la posicio {hit.point} amb normal {hit.normal}");
                     Debug.DrawLine(bottomCol, hit.point, Color.green, 5f);
@@ -195,6 +195,10 @@ public class PlayerController : MonoBehaviour
         if (Physics.Raycast(m_FPCamera.transform.position, m_FPCamera.transform.forward, out hit, Mathf.Infinity, m_Layer))
         {
             Debug.DrawLine(m_FPCamera.transform.position, hit.point, Color.magenta, 5f);
+
+            if (hit.collider.gameObject.CompareTag("CantPortal"))
+                return;
+
             if (actionContext.action.name.Equals("ShootOrange"))
             {
                 m_OrangePortal.transform.position = hit.point;
@@ -215,15 +219,6 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         UpdateState();
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        Debug.Log(collision.gameObject.tag);
-        if (collision.gameObject.CompareTag("Jumpable"))
-        {
-            OnGround = true;
-        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -251,5 +246,14 @@ public class PlayerController : MonoBehaviour
     private void ImpulseOnPortal(Transform otherPortal)
     {
         m_Rb.velocity = otherPortal.transform.forward * m_Rb.velocity.magnitude;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log(collision.gameObject.tag);
+        if (collision.gameObject.CompareTag("CanPortal") || collision.gameObject.CompareTag("CantPortal"))
+        {
+            OnGround = true;
+        }
     }
 }
