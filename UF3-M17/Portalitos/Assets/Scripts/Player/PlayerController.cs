@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Rendering.LookDev;
@@ -158,7 +159,7 @@ public class PlayerController : MonoBehaviour
         if (angle > 180) //CON ESTO TE ASEGURAS DE QUE EL ANGULO ESTE EN EL RANGO DEL CLAMP Y NO SE VUELVA LOCO
             angle -= 360;
 
-        angle = Mathf.Clamp(angle, -70, 70); //CLAMP PARA LIMITAR LO QUE PUEDES MOVER LA CAMARA VERTICALMENTE
+        angle = Mathf.Clamp(angle, -85, 85); //CLAMP PARA LIMITAR LO QUE PUEDES MOVER LA CAMARA VERTICALMENTE
 
         m_FPCamera.transform.localEulerAngles = Vector3.right * angle; //MUEVES LA CAMARA VERTICALMENTE
         transform.Rotate(Vector3.up * mouseMovement.x * m_SensX * Time.deltaTime); //MOVER EL PERSONAJE CON LA CAMARA HORIZONTALMENTE
@@ -177,7 +178,7 @@ public class PlayerController : MonoBehaviour
                 if(hit.collider.gameObject.CompareTag("Jumpable"))
                 {
                     Debug.Log($"He tocat {hit.collider.gameObject.tag} a la posicio {hit.point} amb normal {hit.normal}");
-                    Debug.DrawLine(bottomCol, hit.point, Color.green, 50f);
+                    Debug.DrawLine(bottomCol, hit.point, Color.green, 5f);
                     m_Rb.AddForce(0, m_JumpForce, 0, ForceMode.Impulse);
                     OnGround = false;
                 }
@@ -193,23 +194,20 @@ public class PlayerController : MonoBehaviour
         Vector3 direction = m_FPCamera.transform.forward;
         if (Physics.Raycast(m_FPCamera.transform.position, m_FPCamera.transform.forward, out hit, Mathf.Infinity, m_Layer))
         {
-            Debug.DrawLine(m_FPCamera.transform.position, hit.point, Color.magenta, 50f);
+            Debug.DrawLine(m_FPCamera.transform.position, hit.point, Color.magenta, 5f);
             if (actionContext.action.name.Equals("ShootOrange"))
             {
                 m_OrangePortal.transform.position = hit.point;
-                m_OrangePortal.transform.rotation = Quaternion.FromToRotation(m_OrangePortal.transform.forward, hit.normal) * m_OrangePortal.transform.rotation;
+                m_OrangePortal.transform.forward = hit.normal;
                 if (!m_OrangePortal.activeSelf)
                     m_OrangePortal.SetActive(true);
 
-                Debug.Log("PORTAL NARANJA");
             }else if (actionContext.action.name.Equals("ShootBlue"))
             {
                 m_BluePortal.transform.position = hit.point;
-                m_BluePortal.transform.rotation = Quaternion.FromToRotation(m_BluePortal.transform.forward, hit.normal) * m_BluePortal.transform.rotation;
+                m_BluePortal.transform.forward = hit.normal;
                 if (!m_BluePortal.activeSelf)
                     m_BluePortal.SetActive(true);
-
-                Debug.Log("PORTAL AZUL");
             }
         }
     } 
@@ -226,5 +224,32 @@ public class PlayerController : MonoBehaviour
         {
             OnGround = true;
         }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("BluePortal"))
+        {
+            if (m_OrangePortal.activeSelf)
+            {
+                m_OrangePortal.GetComponent<Portal>().NoCol();
+                transform.position = m_OrangePortal.transform.position;
+                ImpulseOnPortal(m_OrangePortal.transform);
+            }               
+        }
+        else if (other.gameObject.CompareTag("OrangePortal"))
+        {
+            if (m_BluePortal.activeSelf)
+            {
+                m_BluePortal.GetComponent<Portal>().NoCol();
+                transform.position = m_BluePortal.transform.position;
+                ImpulseOnPortal(m_BluePortal.transform);
+            }           
+        }
+    }
+
+    private void ImpulseOnPortal(Transform otherPortal)
+    {
+        m_Rb.velocity = otherPortal.transform.forward * m_Rb.velocity.magnitude;
     }
 }

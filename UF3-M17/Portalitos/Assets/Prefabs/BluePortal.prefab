@@ -223,7 +223,8 @@ GameObject:
   - component: {fileID: 8101878888927114190}
   - component: {fileID: 9058579166040978921}
   - component: {fileID: 4960128834823963679}
-  m_Layer: 0
+  - component: {fileID: 5642888920423762277}
+  m_Layer: 7
   m_Name: BluePortal
   m_TagString: BluePortal
   m_Icon: {fileID: 0}
@@ -237,7 +238,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2830400844692048157}
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.5, y: 2.5, z: 0.1}
   m_ConstrainProportionsScale: 0
@@ -246,7 +247,7 @@ Transform:
   - {fileID: 5470214553428762740}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8101878888927114190
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -318,3 +319,15 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.0000002, y: 1, z: 2.6536543}
   m_Center: {x: 5.8287286e-16, y: 0, z: 0.82682675}
+--- !u!114 &5642888920423762277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2830400844692048157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ae035d91cea3a649841dbe426f6165a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
