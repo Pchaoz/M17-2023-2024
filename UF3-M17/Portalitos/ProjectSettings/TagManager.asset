@@ -11,6 +11,7 @@ TagManager:
   - Roof
   - CanPortal
   - CantPortal
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - UI
   - Shootable
   - Portal
-  - 
+  - Enemy
   - 
   - 
   - 
