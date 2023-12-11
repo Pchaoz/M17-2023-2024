@@ -9,9 +9,9 @@ TagManager:
   - Wall
   - OrangePortal
   - Roof
-  - CanPortal
   - CantPortal
   - Enemy
+  - CamBtn
   layers:
   - Default
   - TransparentFX

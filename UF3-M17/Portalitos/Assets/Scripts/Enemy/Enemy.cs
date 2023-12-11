@@ -12,6 +12,7 @@ public class Enemy : MonoBehaviour
         FOLLOW,
         SHOOT
     }
+    [SerializeField]
     private EnemyState m_CurrentState;
 
     private void ChangeState(EnemyState newState)
@@ -22,7 +23,7 @@ public class Enemy : MonoBehaviour
             return;
 
         ExitState();
-        Debug.Log(newState);
+        //Debug.Log(newState);
         InitState(newState);
     }
     private void InitState(EnemyState currentState)
@@ -43,6 +44,7 @@ public class Enemy : MonoBehaviour
                 break;
             case EnemyState.SHOOT:
                 m_Rb.velocity = Vector3.zero;
+                StartCoroutine(m_ShootCoorutine);
                 break;
         }
     }
@@ -63,6 +65,7 @@ public class Enemy : MonoBehaviour
                 transform.LookAt(m_Target.transform);
                 break;
             case EnemyState.SHOOT:
+                transform.LookAt(m_Target.transform);
                 break;
         }
     }
@@ -78,21 +81,28 @@ public class Enemy : MonoBehaviour
             case EnemyState.FOLLOW:
                 break;
             case EnemyState.SHOOT:
+                StopCoroutine(m_ShootCoorutine);
                 break;
         }
     }
 
     ///--------------------------------------------------------------------\\\
 
+    [Header("Customizable IA stats")]
     [SerializeField]
     private float m_Speed;
+    [SerializeField]
+    private float m_ShootCD;
 
     private Rigidbody m_Rb;
     private GameObject m_Target;
 
+    private IEnumerator m_ShootCoorutine;
+
     private void Awake()
     {
         m_Rb = GetComponent<Rigidbody>();
+        m_ShootCoorutine = Shoot();
         InitState(EnemyState.IDLE);
     }
 
@@ -108,7 +118,23 @@ public class Enemy : MonoBehaviour
             ChangeState(EnemyState.PATROL);
         else
             ChangeState(EnemyState.FOLLOW);
+    }
+    public void ShootTarget(bool inArea)
+    {
+        if (m_Target != null || inArea)
+            ChangeState(EnemyState.SHOOT);
 
-        
+        if (!inArea)
+            ChangeState(EnemyState.IDLE);
+    }
+
+    IEnumerator Shoot()
+    {
+        while (true)
+        {
+            //DISPARA CON LA POSIBILIDAD DE FALLAR EL DISPARO
+            
+            yield return new WaitForSeconds(m_ShootCD);
+        }
     }
 }

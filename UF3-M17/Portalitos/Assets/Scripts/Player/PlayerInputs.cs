@@ -71,6 +71,15 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""b2456040-75ae-48f0-b754-6f1e3b5b54a1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -172,6 +181,17 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""action"": ""ShootOrange"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7bc01291-f0eb-488d-856e-23a052ff4f87"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -191,6 +211,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         m_Ground_Look = m_Ground.FindAction("Look", throwIfNotFound: true);
         m_Ground_ShootBlue = m_Ground.FindAction("ShootBlue", throwIfNotFound: true);
         m_Ground_ShootOrange = m_Ground.FindAction("ShootOrange", throwIfNotFound: true);
+        m_Ground_Interact = m_Ground.FindAction("Interact", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -257,6 +278,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
     private readonly InputAction m_Ground_Look;
     private readonly InputAction m_Ground_ShootBlue;
     private readonly InputAction m_Ground_ShootOrange;
+    private readonly InputAction m_Ground_Interact;
     public struct GroundActions
     {
         private @PlayerInputs m_Wrapper;
@@ -266,6 +288,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         public InputAction @Look => m_Wrapper.m_Ground_Look;
         public InputAction @ShootBlue => m_Wrapper.m_Ground_ShootBlue;
         public InputAction @ShootOrange => m_Wrapper.m_Ground_ShootOrange;
+        public InputAction @Interact => m_Wrapper.m_Ground_Interact;
         public InputActionMap Get() { return m_Wrapper.m_Ground; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -290,6 +313,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @ShootOrange.started += instance.OnShootOrange;
             @ShootOrange.performed += instance.OnShootOrange;
             @ShootOrange.canceled += instance.OnShootOrange;
+            @Interact.started += instance.OnInteract;
+            @Interact.performed += instance.OnInteract;
+            @Interact.canceled += instance.OnInteract;
         }
 
         private void UnregisterCallbacks(IGroundActions instance)
@@ -309,6 +335,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @ShootOrange.started -= instance.OnShootOrange;
             @ShootOrange.performed -= instance.OnShootOrange;
             @ShootOrange.canceled -= instance.OnShootOrange;
+            @Interact.started -= instance.OnInteract;
+            @Interact.performed -= instance.OnInteract;
+            @Interact.canceled -= instance.OnInteract;
         }
 
         public void RemoveCallbacks(IGroundActions instance)
@@ -342,5 +371,6 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         void OnLook(InputAction.CallbackContext context);
         void OnShootBlue(InputAction.CallbackContext context);
         void OnShootOrange(InputAction.CallbackContext context);
+        void OnInteract(InputAction.CallbackContext context);
     }
 }

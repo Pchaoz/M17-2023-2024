@@ -12,19 +12,18 @@ public class PlayerController : MonoBehaviour
     {
         IDLE,
         WALK,
-        JUMP
+        JUMP,
+        SECURITYCAM
     }
     [SerializeField]
     private CharacterState m_CurrentState;
     private void ChangeState(CharacterState newState)
     {
-        //Debug.Log(newState);
-
         if (newState == m_CurrentState)
             return;
 
         ExitState();
-        Debug.Log(newState);
+        //Debug.Log(newState);
         InitState(newState);
     }
     private void InitState(CharacterState currentState)
@@ -38,6 +37,8 @@ public class PlayerController : MonoBehaviour
             case CharacterState.WALK:
                 break;
             case CharacterState.JUMP:
+                break;
+            case CharacterState.SECURITYCAM:
                 break;
         }
     }
@@ -61,6 +62,8 @@ public class PlayerController : MonoBehaviour
                 Look(); //PUEDE MIRAR ALREDEDOR
                 Movement(); //PUEDE MOVERSE
                 break;
+            case CharacterState.SECURITYCAM:
+                break;
         }
     }
    
@@ -73,6 +76,9 @@ public class PlayerController : MonoBehaviour
             case CharacterState.WALK:
                 break;
             case CharacterState.JUMP:
+                break;
+            case CharacterState.SECURITYCAM:
+                m_Rb.velocity = Vector3.zero;
                 break;
         }
     }
@@ -104,6 +110,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private GameObject prefabOrange;
 
+    [Header("Las camaras")]
+    [SerializeField]
+    private GameObject m_SecurityCamera;
+    [SerializeField]
+    private GameObject m_FPCamera;
+
     //LOS PORTALES YA INICIALZADOS
     private GameObject m_BluePortal;
     private GameObject m_OrangePortal;
@@ -111,11 +123,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private LayerMask m_Layer;
     private Rigidbody m_Rb;
-
-
-    [SerializeField]
-    private GameObject m_FPCamera;
-
 
     private void Awake()
     {
@@ -135,6 +142,7 @@ public class PlayerController : MonoBehaviour
         m_Input.FindActionMap("Ground").FindAction("Jump").performed += Jump; //INPUT DEL ESPACIO
         m_Input.FindActionMap("Ground").FindAction("ShootOrange").performed += ShootPortal;
         m_Input.FindActionMap("Ground").FindAction("ShootBlue").performed += ShootPortal;
+        m_Input.FindActionMap("Ground").FindAction("Interact").performed += Interact;
 
         m_Input.Enable();
     }
@@ -167,18 +175,18 @@ public class PlayerController : MonoBehaviour
 
     private void Jump(InputAction.CallbackContext actionContext)
     { 
-        if (OnGround)
+        if (OnGround && m_CurrentState != CharacterState.SECURITYCAM)
         {
             Vector3 bottomCol = Vector3.up * GetComponent<CapsuleCollider>().radius / 2;
             RaycastHit hit;
-            Debug.Log("QUIERO SALTAR, VARIABLE DE SALTO: " + OnGround);
+            //Debug.Log("QUIERO SALTAR, VARIABLE DE SALTO: " + OnGround);
 
             if (Physics.Raycast(bottomCol, Vector2.down, out hit, 0.5f, m_Layer))
             {
-                if(hit.collider.gameObject.CompareTag("CanPortal") || hit.collider.gameObject.CompareTag("CantPortal"))
+                if(hit.collider.gameObject.CompareTag("Jumpable"))
                 {
-                    Debug.Log($"He tocat {hit.collider.gameObject.tag} a la posicio {hit.point} amb normal {hit.normal}");
-                    Debug.DrawLine(bottomCol, hit.point, Color.green, 5f);
+                    //Debug.Log($"He tocat {hit.collider.gameObject.tag} a la posicio {hit.point} amb normal {hit.normal}");
+                    Debug.DrawLine(bottomCol, hit.point, Color.green, 3f);
                     m_Rb.AddForce(0, m_JumpForce, 0, ForceMode.Impulse);
                     OnGround = false;
                 }
@@ -190,13 +198,12 @@ public class PlayerController : MonoBehaviour
     private void ShootPortal(InputAction.CallbackContext actionContext)
     {
         RaycastHit hit;
-        Debug.Log(actionContext.action.name); // LITERALMENTE EL NOMBRE DE LA ACCION
-        Vector3 direction = m_FPCamera.transform.forward;
+        //Debug.Log(actionContext.action.name); // LITERALMENTE EL NOMBRE DE LA ACCION
         if (Physics.Raycast(m_FPCamera.transform.position, m_FPCamera.transform.forward, out hit, Mathf.Infinity, m_Layer))
         {
-            Debug.DrawLine(m_FPCamera.transform.position, hit.point, Color.magenta, 5f);
+            Debug.DrawLine(m_FPCamera.transform.position, hit.point, Color.magenta, 3f);
 
-            if (hit.collider.gameObject.CompareTag("CantPortal"))
+            if (hit.collider.gameObject.CompareTag("CantPortal") || hit.collider.gameObject.CompareTag("CamBtn"))
                 return;
 
             if (actionContext.action.name.Equals("ShootOrange"))
@@ -243,6 +250,40 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void Interact(InputAction.CallbackContext actionContext)
+    {
+        if (m_CurrentState == CharacterState.SECURITYCAM)
+        {
+            ChangeCam();
+            return;
+        }
+
+        RaycastHit hit;
+        if (Physics.Raycast(m_FPCamera.transform.position, m_FPCamera.transform.forward, out hit, 6f, m_Layer))
+        {
+            Debug.DrawLine(m_FPCamera.transform.position, hit.point, Color.blue, 5f);
+            Debug.Log(hit.collider.gameObject.tag);
+            if (hit.collider.gameObject.CompareTag("CamBtn"))
+                ChangeCam();
+        }
+    }
+
+    private void ChangeCam()
+    {
+        if (m_FPCamera.activeSelf)
+        {
+            m_SecurityCamera.SetActive(true);
+            m_FPCamera.SetActive(false);
+            ChangeState(CharacterState.SECURITYCAM);
+        }
+        else
+        {
+            m_SecurityCamera.SetActive(false);
+            m_FPCamera.SetActive(true);
+            ChangeState(CharacterState.IDLE);
+        }
+    }
+
     private void ImpulseOnPortal(Transform otherPortal)
     {
         m_Rb.velocity = otherPortal.transform.forward * m_Rb.velocity.magnitude;
@@ -250,8 +291,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log(collision.gameObject.tag);
-        if (collision.gameObject.CompareTag("CanPortal") || collision.gameObject.CompareTag("CantPortal"))
+        //Debug.Log(collision.gameObject.tag);
+        if (collision.gameObject.CompareTag("Jumpable"))
         {
             OnGround = true;
         }

@@ -20,7 +20,7 @@ public class Portal : MonoBehaviour
     IEnumerator NoPortalCol()
     {
         //COORUTINA QUE DESPUES DE DOS SEGUNDOS VUELVE A ACTIVAR EL COLIDER DE EL PORTAL
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.5f);
         m_Col.enabled = true;
     }
 }
