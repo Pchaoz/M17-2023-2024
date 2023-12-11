@@ -137,7 +137,7 @@ GameObject:
   - component: {fileID: 85907261}
   m_Layer: 6
   m_Name: Ground
-  m_TagString: CanPortal
+  m_TagString: Jumpable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -242,7 +242,7 @@ GameObject:
   - component: {fileID: 306492964}
   m_Layer: 6
   m_Name: Ramp_0
-  m_TagString: CanPortal
+  m_TagString: Jumpable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -483,7 +483,7 @@ GameObject:
   - component: {fileID: 389412120}
   - component: {fileID: 389412119}
   m_Layer: 6
-  m_Name: BtnChangeCamera
+  m_Name: BtnSecurity
   m_TagString: CamBtn
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -567,14 +567,33 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 389412118}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.33, y: 0.98, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -2.5191894, y: -0.14576793, z: -0.08498934}
   m_LocalScale: {x: 0.34593, y: 0.34593, z: 0.34593}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_Father: {fileID: 943777807}
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &399918057 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5460958111306325012, guid: 4728d7d87483c4646aa5ff4765aead4b,
+    type: 3}
+  m_PrefabInstance: {fileID: 448559574573787274}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &399918060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 399918057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b8611a0303d3c648be22ee4998b24db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Parent: {fileID: 518889547}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -819,7 +838,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 30.34, y: 31.099, z: -3.111}
 --- !u!1 &518889547 stripped
 GameObject:
@@ -957,6 +976,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 389412122}
   - {fileID: 85907260}
   - {fileID: 1489492636}
   - {fileID: 2050847996}
@@ -1169,7 +1189,7 @@ GameObject:
   - component: {fileID: 1489492637}
   m_Layer: 6
   m_Name: Wall_0
-  m_TagString: CanPortal
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1274,7 +1294,7 @@ GameObject:
   - component: {fileID: 1572830564}
   m_Layer: 6
   m_Name: Wall_2
-  m_TagString: CanPortal
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1484,7 +1504,7 @@ GameObject:
   - component: {fileID: 1643880192}
   m_Layer: 6
   m_Name: Roof_0
-  m_TagString: CanPortal
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1589,7 +1609,7 @@ GameObject:
   - component: {fileID: 1773234671}
   m_Layer: 6
   m_Name: Ramp_1
-  m_TagString: CanPortal
+  m_TagString: Jumpable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1694,7 +1714,7 @@ GameObject:
   - component: {fileID: 2050847997}
   m_Layer: 6
   m_Name: Wall_1
-  m_TagString: CanPortal
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1799,7 +1819,7 @@ GameObject:
   - component: {fileID: 2136931809}
   m_Layer: 6
   m_Name: Wall_3
-  m_TagString: CanPortal
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1971,4 +1991,8 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 998512116}
+    - targetCorrespondingSourceObject: {fileID: 5460958111306325012, guid: 4728d7d87483c4646aa5ff4765aead4b,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 399918060}
   m_SourcePrefab: {fileID: 100100000, guid: 4728d7d87483c4646aa5ff4765aead4b, type: 3}
