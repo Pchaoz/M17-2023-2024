@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.AI;
+using Random = UnityEngine.Random;
 
 public class Enemy : MonoBehaviour
 {
@@ -33,10 +35,6 @@ public class Enemy : MonoBehaviour
         switch (m_CurrentState)
         {
             case EnemyState.IDLE:
-                if (m_Target == null)
-                    ChangeState(EnemyState.PATROL);
-                else
-                    ChangeState(EnemyState.FOLLOW);
                 break;
             case EnemyState.PATROL:
                 break;
@@ -56,16 +54,19 @@ public class Enemy : MonoBehaviour
             case EnemyState.IDLE:
                 break;
             case EnemyState.PATROL:
+                if (m_DetectionArea.Target != null)
+                    ChangeState(EnemyState.FOLLOW);
 
-                //SE MUEVE EN EL NAVMESH
+                Patrol();                    
                 break;
             case EnemyState.FOLLOW:
+                if (m_DetectionArea.Target == null)
+                    ChangeState(EnemyState.PATROL);
 
-                transform.position = Vector3.MoveTowards(transform.position, m_Target.transform.position, m_Speed * Time.deltaTime);
-                transform.LookAt(m_Target.transform);
+                Follow();
                 break;
             case EnemyState.SHOOT:
-                transform.LookAt(m_Target.transform);
+                transform.LookAt(m_DetectionArea.Target.transform);
                 break;
         }
     }
@@ -95,15 +96,22 @@ public class Enemy : MonoBehaviour
     private float m_ShootCD;
 
     private Rigidbody m_Rb;
-    private GameObject m_Target;
+    private DetectionArea m_DetectionArea;
+    private NavMeshAgent m_Agent;
+
+    [SerializeField]
+    private List<Transform> m_Nodes;
+    private Transform m_ActiveNode;
 
     private IEnumerator m_ShootCoorutine;
 
     private void Awake()
     {
+        m_Agent = GetComponent<NavMeshAgent>();
         m_Rb = GetComponent<Rigidbody>();
+        m_DetectionArea = GetComponentInChildren<DetectionArea>();
         m_ShootCoorutine = Shoot();
-        InitState(EnemyState.IDLE);
+        InitState(EnemyState.PATROL);
     }
 
     private void Update()
@@ -111,17 +119,10 @@ public class Enemy : MonoBehaviour
         UpdateState();
     }
 
-    public void SetTarget(GameObject target)
-    {
-        m_Target = target;
-        if (target == null)
-            ChangeState(EnemyState.PATROL);
-        else
-            ChangeState(EnemyState.FOLLOW);
-    }
+   
     public void ShootTarget(bool inArea)
     {
-        if (m_Target != null || inArea)
+        if (m_DetectionArea.Target != null || inArea)
             ChangeState(EnemyState.SHOOT);
 
         if (!inArea)
@@ -136,5 +137,19 @@ public class Enemy : MonoBehaviour
             
             yield return new WaitForSeconds(m_ShootCD);
         }
+    }
+    private void Patrol()
+    {
+        if (m_ActiveNode == null || Vector3.Distance(transform.position, m_ActiveNode.position) < 0.5)
+        {
+            int nodeToGet = Random.Range(0, m_Nodes.Count);
+            m_ActiveNode = m_Nodes[nodeToGet];
+        }
+        m_Agent.SetDestination(m_ActiveNode.position);
+    }
+    private void Follow()
+    {
+        transform.LookAt(m_DetectionArea.Target.transform);
+        m_Agent.SetDestination(m_DetectionArea.Target.transform.position);
     }
 }
