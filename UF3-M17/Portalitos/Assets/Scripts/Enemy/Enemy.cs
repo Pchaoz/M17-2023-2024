@@ -35,6 +35,10 @@ public class Enemy : MonoBehaviour
         switch (m_CurrentState)
         {
             case EnemyState.IDLE:
+                if (m_DetectionArea.Target != null) 
+                    ChangeState(EnemyState.FOLLOW);
+                else if (m_DetectionArea.Target == null)
+                    ChangeState(EnemyState.PATROL); 
                 break;
             case EnemyState.PATROL:
                 break;
@@ -54,18 +58,30 @@ public class Enemy : MonoBehaviour
             case EnemyState.IDLE:
                 break;
             case EnemyState.PATROL:
+
                 if (m_DetectionArea.Target != null)
                     ChangeState(EnemyState.FOLLOW);
 
                 Patrol();                    
                 break;
             case EnemyState.FOLLOW:
+
                 if (m_DetectionArea.Target == null)
                     ChangeState(EnemyState.PATROL);
+
+                if (m_ShootArea.CanShoot)
+                    ChangeState(EnemyState.SHOOT);
 
                 Follow();
                 break;
             case EnemyState.SHOOT:
+
+                if (m_DetectionArea.Target == null) { }
+                    ChangeState(EnemyState.IDLE);
+
+                if (!m_ShootArea.CanShoot)
+                    ChangeState(EnemyState.IDLE);
+
                 transform.LookAt(m_DetectionArea.Target.transform);
                 break;
         }
@@ -97,10 +113,12 @@ public class Enemy : MonoBehaviour
 
     private Rigidbody m_Rb;
     private DetectionArea m_DetectionArea;
+    private ShootableArea m_ShootArea;
     private NavMeshAgent m_Agent;
 
     [SerializeField]
     private List<Transform> m_Nodes;
+    [SerializeField]
     private Transform m_ActiveNode;
 
     private IEnumerator m_ShootCoorutine;
@@ -109,6 +127,7 @@ public class Enemy : MonoBehaviour
     {
         m_Agent = GetComponent<NavMeshAgent>();
         m_Rb = GetComponent<Rigidbody>();
+        m_ShootArea = GetComponentInChildren<ShootableArea>();
         m_DetectionArea = GetComponentInChildren<DetectionArea>();
         m_ShootCoorutine = Shoot();
         InitState(EnemyState.PATROL);
@@ -117,16 +136,6 @@ public class Enemy : MonoBehaviour
     private void Update()
     {
         UpdateState();
-    }
-
-   
-    public void ShootTarget(bool inArea)
-    {
-        if (m_DetectionArea.Target != null || inArea)
-            ChangeState(EnemyState.SHOOT);
-
-        if (!inArea)
-            ChangeState(EnemyState.IDLE);
     }
 
     IEnumerator Shoot()
@@ -140,7 +149,7 @@ public class Enemy : MonoBehaviour
     }
     private void Patrol()
     {
-        if (m_ActiveNode == null || Vector3.Distance(transform.position, m_ActiveNode.position) < 0.5)
+        if (m_ActiveNode == null || Vector3.Distance(transform.position, m_ActiveNode.position) < 1)
         {
             int nodeToGet = Random.Range(0, m_Nodes.Count);
             m_ActiveNode = m_Nodes[nodeToGet];
@@ -149,7 +158,10 @@ public class Enemy : MonoBehaviour
     }
     private void Follow()
     {
-        transform.LookAt(m_DetectionArea.Target.transform);
-        m_Agent.SetDestination(m_DetectionArea.Target.transform.position);
+        if (m_DetectionArea.Target != null)
+        {
+            transform.LookAt(m_DetectionArea.Target.transform);
+            m_Agent.SetDestination(m_DetectionArea.Target.transform.position);
+        }
     }
 }

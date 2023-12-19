@@ -4,17 +4,18 @@ using UnityEngine;
 
 public class ShootableArea : MonoBehaviour
 {
-    [SerializeField]
-    GameObject m_Parent;
+    private bool m_OnRange;
+
+    public bool CanShoot => m_OnRange;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
-            m_Parent.GetComponent<Enemy>().ShootTarget(true);
+            m_OnRange = true;
     }
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
-            m_Parent.GetComponent<Enemy>().ShootTarget(false);
+            m_OnRange = false;
     }
 }

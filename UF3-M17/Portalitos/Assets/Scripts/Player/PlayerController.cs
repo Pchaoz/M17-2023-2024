@@ -179,11 +179,11 @@ public class PlayerController : MonoBehaviour
         {
             Vector3 bottomCol = Vector3.up * GetComponent<CapsuleCollider>().radius / 2;
             RaycastHit hit;
-            //Debug.Log("QUIERO SALTAR, VARIABLE DE SALTO: " + OnGround);
+            Debug.Log("QUIERO SALTAR, VARIABLE DE SALTO: " + OnGround);
 
-            if (Physics.Raycast(bottomCol, Vector2.down, out hit, 0.5f, m_Layer))
-            {
-                Debug.DrawLine(bottomCol, hit.point, Color.green, 3f);
+            if (Physics.Raycast(bottomCol, Vector2.down, out hit, Mathf.Infinity, m_Layer))
+            { 
+                Debug.DrawLine(bottomCol, hit.point, Color.black, 6f);
                 if (hit.collider.gameObject.CompareTag("Jumpable"))
                 {
                     Debug.Log($"He tocat {hit.collider.gameObject.tag} a la posicio {hit.point} amb normal {hit.normal}");
