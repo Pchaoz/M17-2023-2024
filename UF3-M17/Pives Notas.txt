@@ -1,1 +1,31 @@
--
+--- ZONA 1-2 ---
+- Fixear las vallas para que sean vallas de verdad (Opcional)
+
+- Hacer un muro enorme invisible para no caerse del mapa (16/01/24 por la mañana)
+
+- Hacer el "jump pad" para saltar a las bouncing balls (Que aun no estaran programadas pero si 
+estaran fisicamente) (16/01/24 por la mañana)
+
+- Hacer las bouncing balls haciendo que dependiendo de la zona donde caes de ellas te 
+impulsan de una forma distinta (16/01/24 por la tarde en clase)
+
+- Fixear los pilares del principio para que no te empujen de una forma tan bestia 
+(No prioritario, pero se ha de hacer)
+
+--- ZONA 3 ---
+
+- Hacer el shader de agua y aplicarlo al plano de la tercera zona (17/01/24 todo el dia quizas)
+
+- Dos opciones: (Decidir antes del 18/01/24)
+
+	* Tocar el shader de agua te resetea y te tira para atras (facil)
+
+	* El shader de agua a parte de hacerte ir mas lento porque estas en el agua, puedes volver
+	hacia atras y subir unas escaleras (obviamente tambien tendre que hacer las escaleras) (mas complicao)
+
+- Hacer las plataformas que flotan por encima del agua de la tercera zona (Por decidir, depende de la tarea de arriba)
+
+- Hacer la meta y detectar que has llegado correctamente al final, puede ser que detecte ese suelo 
+como victoria o que haya un portalito con un trigger que detecte que la has cruzado por lo tanto  (Por decidir, depende de la tarea de arriba)
+has ganado (Por decidir, depende de la tarea de arriba)
+
