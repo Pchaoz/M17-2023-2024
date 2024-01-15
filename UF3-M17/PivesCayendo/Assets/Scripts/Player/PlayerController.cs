@@ -139,7 +139,7 @@ public class PlayerController : MonoBehaviour
         {
             Vector3 bottomCol = Vector3.up * GetComponent<CapsuleCollider>().radius / 2;
             RaycastHit hit;
-            Debug.Log("QUIERO SALTAR, VARIABLE DE SALTO: " + OnGround);
+            //Debug.Log("QUIERO SALTAR, VARIABLE DE SALTO: " + OnGround);
 
             if (Physics.Raycast(bottomCol, Vector2.down, out hit, Mathf.Infinity, m_LayerMask))
             {
@@ -147,7 +147,7 @@ public class PlayerController : MonoBehaviour
                 if (hit.collider.gameObject.CompareTag("JumpReset"))
                 {
                     ChangeState(PlayerStates.JUMP);
-                    Debug.Log($"He tocat {hit.collider.gameObject.tag} a la posicio {hit.point} amb normal {hit.normal}");
+                    //Debug.Log("He tocat {hit.collider.gameObject.tag} a la posicio {hit.point} amb normal {hit.normal}");
                     m_Rb.AddForce(0, m_JumpForce, 0, ForceMode.Impulse);
                     OnGround = false;
                 }

@@ -4,15 +4,24 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField]
+    private List<GameObject> m_StartWallList = new List<GameObject>();
+    [SerializeField]
+    private float m_StartCooldown;
+
+    private void Start()
     {
-        
+        //ACTIVAR CUENTA ATRAS
+        StartCoroutine(StartCooldown());
     }
 
-    // Update is called once per frame
-    void Update()
+    private IEnumerator StartCooldown()
     {
-        
+
+        yield return new WaitForSeconds(m_StartCooldown);
+        foreach (GameObject wall in m_StartWallList)
+        {
+            wall.SetActive(false);
+        }
     }
 }
