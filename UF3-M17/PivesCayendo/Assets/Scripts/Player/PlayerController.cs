@@ -46,14 +46,17 @@ public class PlayerController : MonoBehaviour
             case PlayerStates.IDLE:
                 if (m_BodyMovement.ReadValue<Vector2>() != Vector2.zero)
                     ChangeState(PlayerStates.WALK);
+                Look(); //POTS MIRAR
                 break;
             case PlayerStates.WALK:
                 if (m_BodyMovement.ReadValue<Vector2>() == Vector2.zero)
                     ChangeState(PlayerStates.IDLE);
                 Walk(); //POTS CAMINAR
+                Look(); //POTS MIRAR
                 break;
             case PlayerStates.JUMP:
                 Walk(); //POTS CAMINAR
+                Look(); //POTS MIRAR
                 break;
         }
     }
@@ -75,14 +78,22 @@ public class PlayerController : MonoBehaviour
     private InputActionAsset m_InputAsset;
     private InputActionAsset m_Input;
     private InputAction m_BodyMovement;
+    private InputAction m_MouseMovement;
 
     private Rigidbody m_Rb;
+
+    [SerializeField]
+    private GameObject m_ThirdPersonCamera;
 
     [Header("PLAYER STATS")]
     [SerializeField]
     private float m_Speed;
     [SerializeField]
     private float m_JumpForce;
+    [SerializeField]
+    private float m_SensX;
+    [SerializeField]
+    private float m_SensY;
     private bool OnGround;
 
     [SerializeField]
@@ -98,6 +109,7 @@ public class PlayerController : MonoBehaviour
         Assert.IsNotNull(m_InputAsset);
         m_Input = Instantiate(m_InputAsset);
         m_BodyMovement = m_Input.FindActionMap("Ground").FindAction("Walk");
+        m_MouseMovement = m_Input.FindActionMap("Ground").FindAction("Camera");
         m_Input.FindActionMap("Ground").FindAction("Jump").performed += Jump; //INPUT DEL ESPACIO
         m_Input.FindActionMap("Ground").Enable();
         
@@ -142,6 +154,12 @@ public class PlayerController : MonoBehaviour
 
             }
         }
+    }
+
+    private void Look()
+    {
+        Vector2 mouseMovement = m_MouseMovement.ReadValue<Vector2>(); //LEES EL INPUT DEL DELTA MOUSE
+        transform.Rotate(Vector3.up * mouseMovement.x * m_SensX * Time.deltaTime); //MOVER EL PERSONAJE CON LA CAMARA HORIZONTALMENTE
     }
 
     private void OnCollisionEnter(Collision collision)
