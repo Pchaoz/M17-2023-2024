@@ -8,6 +8,7 @@ TagManager:
   - MovingPilar
   - MapBorder
   - JumpPad
+  - ResetArea
   layers:
   - Default
   - TransparentFX
